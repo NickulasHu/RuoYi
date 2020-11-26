@@ -46,4 +46,11 @@ public class IdUtils
     {
         return UUID.fastUUID().toString(true);
     }
+    
+    public static Long getLongFormString(String UUID){
+        Integer userId=UUID.toString().hashCode();
+        userId= userId< 0 ? -userId: userId;
+        return Long.valueOf(String.valueOf(userId));
+    }
+
 }

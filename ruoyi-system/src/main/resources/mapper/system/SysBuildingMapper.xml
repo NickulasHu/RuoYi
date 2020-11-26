@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysBuildingMapper">
+    
+    <resultMap type="SysBuilding" id="SysBuildingResult">
+        <result property="dormId"    column="dormId"    />
+        <result property="dormName"    column="dormName"    />
+        <result property="dormCode"    column="dormCode"    />
+        <result property="dormLevel"    column="dormLevel"    />
+        <result property="dormSortId"    column="dormSortId"    />
+        <result property="dormNum"    column="dormNum"    />
+        <result property="parentDormId"    column="parentDormId"    />
+        <result property="parentDormCode"    column="parentDormCode"    />
+    </resultMap>
+
+    <sql id="selectSysBuildingVo">
+        select dormId, dormName, dormCode, dormLevel, dormSortId, dormNum, parentDormId, parentDormCode from sys_building
+    </sql>
+
+    <select id="selectSysBuildingList" parameterType="SysBuilding" resultMap="SysBuildingResult">
+        <include refid="selectSysBuildingVo"/>
+        <where>  
+            <if test="dormName != null  and dormName != ''"> and dormName like concat('%', #{dormName}, '%')</if>
+            <if test="dormCode != null  and dormCode != ''"> and dormCode = #{dormCode}</if>
+            <if test="dormLevel != null "> and dormLevel = #{dormLevel}</if>
+            <if test="dormSortId != null "> and dormSortId = #{dormSortId}</if>
+            <if test="dormNum != null "> and dormNum = #{dormNum}</if>
+            <if test="parentDormId != null  and parentDormId != ''"> and parentDormId = #{parentDormId}</if>
+            <if test="parentDormCode != null  and parentDormCode != ''"> and parentDormCode = #{parentDormCode}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysBuildingById" parameterType="String" resultMap="SysBuildingResult">
+        <include refid="selectSysBuildingVo"/>
+        where dormId = #{dormId}
+    </select>
+        
+    <insert id="insertSysBuilding" parameterType="SysBuilding">
+        insert into sys_building
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dormId != null">dormId,</if>
+            <if test="dormName != null">dormName,</if>
+            <if test="dormCode != null">dormCode,</if>
+            <if test="dormLevel != null">dormLevel,</if>
+            <if test="dormSortId != null">dormSortId,</if>
+            <if test="dormNum != null">dormNum,</if>
+            <if test="parentDormId != null">parentDormId,</if>
+            <if test="parentDormCode != null">parentDormCode,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dormId != null">#{dormId},</if>
+            <if test="dormName != null">#{dormName},</if>
+            <if test="dormCode != null">#{dormCode},</if>
+            <if test="dormLevel != null">#{dormLevel},</if>
+            <if test="dormSortId != null">#{dormSortId},</if>
+            <if test="dormNum != null">#{dormNum},</if>
+            <if test="parentDormId != null">#{parentDormId},</if>
+            <if test="parentDormCode != null">#{parentDormCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysBuilding" parameterType="SysBuilding">
+        update sys_building
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dormName != null">dormName = #{dormName},</if>
+            <if test="dormCode != null">dormCode = #{dormCode},</if>
+            <if test="dormLevel != null">dormLevel = #{dormLevel},</if>
+            <if test="dormSortId != null">dormSortId = #{dormSortId},</if>
+            <if test="dormNum != null">dormNum = #{dormNum},</if>
+            <if test="parentDormId != null">parentDormId = #{parentDormId},</if>
+            <if test="parentDormCode != null">parentDormCode = #{parentDormCode},</if>
+        </trim>
+        where dormId = #{dormId}
+    </update>
+
+    <delete id="deleteSysBuildingById" parameterType="String">
+        delete from sys_building where dormId = #{dormId}
+    </delete>
+
+    <delete id="deleteSysBuildingByIds" parameterType="String">
+        delete from sys_building where dormId in 
+        <foreach item="dormId" collection="array" open="(" separator="," close=")">
+            #{dormId}
+        </foreach>
+    </delete>
+
+   <delete id="deleteAllSysBuilding" parameterType="String">
+        delete from sys_building
+    </delete>
+
+</mapper>

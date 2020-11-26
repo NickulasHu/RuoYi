@@ -16,7 +16,7 @@ ruoyi:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为80
-  port: 80
+  port: 8090
   servlet:
     # 应用的访问路径
     context-path: /
@@ -135,3 +135,9 @@ xss:
 swagger:
   # 是否开启swagger
   enabled: true
+
+#海康接口调用配置
+hikvision:
+   host: 10.3.38.2:443
+   appKey: 27012763
+   appSecret: KqVkuth9Fa8IBxb1rLQU

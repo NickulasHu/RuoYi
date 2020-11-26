@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysRuleMapper">
+    
+    <resultMap type="SysRule" id="SysRuleResult">
+        <result property="ruleId"    column="ruleId"    />
+        <result property="ruleName"    column="ruleName"    />
+        <result property="inDormStart"    column="inDormStart"    />
+        <result property="inDormEnd"    column="inDormEnd"    />
+        <result property="laterTime"    column="laterTime"    />
+        <result property="period"    column="period"    />
+        <result property="ruleUsers"    column="ruleUsers"    />
+    </resultMap>
+
+    <sql id="selectSysRuleVo">
+        select ruleId, ruleName, inDormStart, inDormEnd, laterTime, period, ruleUsers from sys_rule
+    </sql>
+
+    <select id="selectSysRuleList" parameterType="SysRule" resultMap="SysRuleResult">
+        <include refid="selectSysRuleVo"/>
+        <where>  
+            <if test="ruleName != null  and ruleName != ''"> and ruleName like concat('%', #{ruleName}, '%')</if>
+            <if test="inDormStart != null "> and inDormStart = #{inDormStart}</if>
+            <if test="inDormEnd != null "> and inDormEnd = #{inDormEnd}</if>
+            <if test="laterTime != null "> and laterTime = #{laterTime}</if>
+            <if test="period != null  and period != ''"> and period = #{period}</if>
+            <if test="ruleUsers != null  and ruleUsers != ''"> and ruleUsers = #{ruleUsers}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysRuleById" parameterType="String" resultMap="SysRuleResult">
+        <include refid="selectSysRuleVo"/>
+        where ruleId = #{ruleId}
+    </select>
+        
+    <insert id="insertSysRule" parameterType="SysRule">
+        insert into sys_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ruleId != null">ruleId,</if>
+            <if test="ruleName != null">ruleName,</if>
+            <if test="inDormStart != null">inDormStart,</if>
+            <if test="inDormEnd != null">inDormEnd,</if>
+            <if test="laterTime != null">laterTime,</if>
+            <if test="period != null">period,</if>
+            <if test="ruleUsers != null">ruleUsers,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ruleId != null">#{ruleId},</if>
+            <if test="ruleName != null">#{ruleName},</if>
+            <if test="inDormStart != null">#{inDormStart},</if>
+            <if test="inDormEnd != null">#{inDormEnd},</if>
+            <if test="laterTime != null">#{laterTime},</if>
+            <if test="period != null">#{period},</if>
+            <if test="ruleUsers != null">#{ruleUsers},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysRule" parameterType="SysRule">
+        update sys_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ruleName != null">ruleName = #{ruleName},</if>
+            <if test="inDormStart != null">inDormStart = #{inDormStart},</if>
+            <if test="inDormEnd != null">inDormEnd = #{inDormEnd},</if>
+            <if test="laterTime != null">laterTime = #{laterTime},</if>
+            <if test="period != null">period = #{period},</if>
+            <if test="ruleUsers != null">ruleUsers = #{ruleUsers},</if>
+        </trim>
+        where ruleId = #{ruleId}
+    </update>
+
+    <delete id="deleteSysRuleById" parameterType="String">
+        delete from sys_rule where ruleId = #{ruleId}
+    </delete>
+    
+    <delete id="deleteAllSysRuleByIds" parameterType="String">
+        delete from sys_rule
+    </delete>
+
+    <delete id="deleteSysRuleByIds" parameterType="String">
+        delete from sys_rule where ruleId in 
+        <foreach item="ruleId" collection="array" open="(" separator="," close=")">
+            #{ruleId}
+        </foreach>
+    </delete>
+
+</mapper>

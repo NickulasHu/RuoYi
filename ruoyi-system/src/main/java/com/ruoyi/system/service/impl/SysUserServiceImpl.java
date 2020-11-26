@@ -2,11 +2,13 @@ package com.ruoyi.system.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysRole;
@@ -517,4 +519,26 @@ public class SysUserServiceImpl implements ISysUserService
     {
         return userMapper.updateUser(user);
     }
+
+	@Override
+	public int deleteAllUsers(){
+		SysUser sysUser=new SysUser();
+		 List<SysUser> users=userMapper.selectUserList(sysUser);
+		 if(users==null||users.size()==0)return 0; 
+		 String userIds=StringUtils.EMPTY;
+		 for (int i = 0; i < users.size(); i++) {
+			 if (StringUtils.isNotNull(users.get(i).getUserId()) && users.get(i).isAdmin())
+             {
+                 continue;
+             }else {
+            	 if(i==0) {
+    				 userIds=String.valueOf(users.get(i).getUserId());
+    			 }else {
+    				 userIds+=","+users.get(i).getUserId();
+    			 }
+             }
+			 
+		 }
+	     return deleteUserByIds(userIds);
+	}
 }

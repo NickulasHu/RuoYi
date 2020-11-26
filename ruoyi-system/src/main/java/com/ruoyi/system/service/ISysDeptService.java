@@ -19,6 +19,11 @@ public interface ISysDeptService
      * @return 部门信息集合
      */
     public List<SysDept> selectDeptList(SysDept dept);
+    
+    /**
+     * 根据父级Id查询子部门
+     */
+    public List<SysDept> selectChildrenDeptById(Long parenId);
 
     /**
      * 查询部门管理树

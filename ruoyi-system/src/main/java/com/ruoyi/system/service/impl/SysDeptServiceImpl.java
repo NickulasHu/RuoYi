@@ -308,4 +308,9 @@ public class SysDeptServiceImpl implements ISysDeptService
         }
         return UserConstants.DEPT_NAME_UNIQUE;
     }
+
+	@Override
+	public List<SysDept> selectChildrenDeptById(Long parentId) {
+	    return deptMapper.selectChildrenDeptById(parentId);
+	}
 }

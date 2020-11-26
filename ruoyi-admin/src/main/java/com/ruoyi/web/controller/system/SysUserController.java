@@ -1,9 +1,14 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.hikvision.artemis.sdk.ArtemisHttpUtil;
+import com.hikvision.artemis.sdk.config.ArtemisConfig;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -24,10 +34,12 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.framework.shiro.service.SysPasswordService;
 import com.ruoyi.system.service.ISysPostService;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.web.core.config.HikvisionConfig;
 
 /**
  * 用户信息
@@ -51,6 +63,9 @@ public class SysUserController extends BaseController
 
     @Autowired
     private SysPasswordService passwordService;
+    
+    @Autowired
+    private HikvisionConfig hikvisionConfig;
 
     @RequiresPermissions("system:user:view")
     @GetMapping()
@@ -101,7 +116,109 @@ public class SysUserController extends BaseController
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         return util.importTemplateExcel("用户数据");
     }
+    
+    /**同步用户数据**/
+    @RequiresPermissions("system:user:view")
+    @PostMapping("/syncUserINfo")
+    @ResponseBody
+    public AjaxResult syncUserINfo(String deptId,String deptName)
+    {
+    	//删除所有用户，除了管理员
+    	DeleteAllUsers();
+    	getUserFromHiKvision(deptId,deptName);
+    	//如果请求参数出错，需报出异常
+    	boolean result=false;
+    	if(result) {
+    		return AjaxResult.error("请检查组织名称是否一致");
+    	}else {
+    		return AjaxResult.success("success");
+    	}
+    }
+    
+    /**同步前删除原有人员**/
+    private void DeleteAllUsers() {
+    	userService.deleteAllUsers();
+    	
+    	/*try {
+			@SuppressWarnings("unused")
+			int result=userService.deleteAllUsers();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
+	}
 
+	@Async
+    private String getUserFromHiKvision(String deptId,String deptName) {
+    	String mesg=StringUtils.EMPTY;
+    	ArtemisConfig.host=hikvisionConfig.host;
+    	ArtemisConfig.appKey=hikvisionConfig.appKey;
+    	ArtemisConfig.appSecret=hikvisionConfig.appSecret;
+    	
+    	String getSecurityApi="/artemis" + "/api/resource/v2/person/personList";
+    	 @SuppressWarnings("serial")
+		 Map<String, String> path = new HashMap<String, String>(2) {
+    	 {
+    		 put("https://", getSecurityApi);
+    	 }
+    	 };
+    	 
+    	 JSONObject jsonBody = new JSONObject();
+    	 boolean getAll=false;
+    	 int pageIndex=1;
+    	 
+    	 while(!getAll) {
+    		 jsonBody.put("pageNo",pageIndex++);
+        	 jsonBody.put("pageSize",1000);
+        	 String body = jsonBody.toJSONString();
+    		 List<SysUser> sysUsers=new ArrayList<SysUser>();
+    		 
+    		 String result = ArtemisHttpUtil.doPostStringArtemis(path, body, null,null,"application/json");
+        	 JSONObject jsonData = JSONObject.parseObject(result);
+        	 if("0".equals(jsonData.getString("code"))&&jsonData.getString("data")!=null) {
+        		 jsonData=JSONObject.parseObject(jsonData.getString("data"));
+        		 if(jsonData.getString("list")!=null) {
+        			 JSONArray deptList=JSONArray.parseArray(jsonData.getString("list"));
+        			 
+        			 if(deptList==null||deptList.size()<1000) {
+        				 getAll=true;
+        			 }
+        			 
+        			 if(deptList!=null&&deptList.size()>0) {
+        				 for (int i = 0; i < deptList.size(); i++) {
+        					 JSONObject jsonUser = (JSONObject)deptList.get(i);
+        					 SysUser user=new SysUser();
+        					 
+        					 if(jsonUser.getString("personId")!=null) {
+        						 user.setUserId(IdUtils.getLongFormString(jsonUser.getString("personId"))); 
+        					 }
+        					 
+        					 if(jsonUser.getString("personName")!=null) {
+        						 user.setUserName(jsonUser.getString("personName")); 
+        						 user.setLoginName(jsonUser.getString("personName")+jsonUser.getString("personId")); 
+        					 }
+        					 user.setPassword("000000");
+        					 if(jsonUser.getString("orgIndexCode")!=null) {
+        						 user.setDeptId(IdUtils.getLongFormString(jsonUser.getString("orgIndexCode")));
+        					 }
+        					 
+        					user.setSalt(ShiroUtils.randomSalt());
+    			            user.setPassword(passwordService.encryptPassword(user.getLoginName(), user.getPassword(), user.getSalt()));
+    			            user.setCreateBy(ShiroUtils.getLoginName());
+    			            sysUsers.add(user);
+    					}
+        			 }
+        		 }
+        	 }else {
+        		 mesg+=jsonData.getString("msg");
+        	 }
+        	 
+        	String operName = ShiroUtils.getSysUser().getLoginName();
+        	mesg+=userService.importUser(sysUsers,true,operName);
+    	 }
+    	
+    	return mesg;
+    }
+    
     /**
      * 新增用户
      */

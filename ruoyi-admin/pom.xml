@@ -78,7 +78,29 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
-
+        
+        <dependency>
+			<groupId>com.hikvision.ga</groupId>
+			<artifactId>artemis-http-client</artifactId>
+			<version>1.1.2</version>
+			<exclusions>
+		        <exclusion>
+		            <groupId>org.slf4j</groupId>
+		            <artifactId>slf4j-log4j12</artifactId>
+		        </exclusion>
+		        <exclusion>
+		            <groupId>log4j</groupId>
+		            <artifactId>log4j</artifactId>
+		        </exclusion>
+		    </exclusions>
+		</dependency>
+		
+		<dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-mp</artifactId>
+            <version>3.9.0</version>
+        </dependency>
+		
     </dependencies>
 
     <build>

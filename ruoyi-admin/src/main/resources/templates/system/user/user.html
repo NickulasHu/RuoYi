@@ -31,6 +31,7 @@
 				<div class="col-sm-12 search-collapse">
 					<form id="user-form">
 						<input type="hidden" id="deptId" name="deptId">
+		                <input type="hidden" id="deptName" name="deptName">
 		                <input type="hidden" id="parentId" name="parentId">
 						<div class="select-list">
 							<ul>
@@ -62,7 +63,7 @@
 				</div>
 				
 		        <div class="btn-group-sm" id="toolbar" role="group">
-		        	<a class="btn btn-success" onclick="$.operate.addTab()" shiro:hasPermission="system:user:add">
+		        	<!-- <a class="btn btn-success" onclick="$.operate.addTab()" shiro:hasPermission="system:user:add">
 		                <i class="fa fa-plus"></i> 新增
 		            </a>
 		             <a class="btn btn-primary single disabled" onclick="$.operate.editTab()" shiro:hasPermission="system:user:edit">
@@ -76,6 +77,9 @@
 			        </a>
 		            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:user:export">
 			            <i class="fa fa-download"></i> 导出
+			        </a> -->
+			        <a class="btn btn-info" onclick="syncUserINfo()" shiro:hasPermission="system:user:import">
+			            <i class="fa fa-upload"></i> 数据同步
 			        </a>
 		        </div>
 		        
@@ -131,11 +135,6 @@
 		        {
 		            field: 'userId',
 		            title: '用户ID'
-		        },
-		        {
-		            field: 'loginName',
-		            title: '登录名称',
-		            sortable: true
 		        },
 		        {
 		            field: 'userName',
@@ -198,8 +197,25 @@
 			function zOnClick(event, treeId, treeNode) {
 				$("#deptId").val(treeNode.id);
 				$("#parentId").val(treeNode.pId);
+				$("#deptName").val(treeNode.name);
 				$.table.search();
 			}
+		}
+		
+		function syncUserINfo(){
+			var deptId=$("#deptId").val();
+			var deptName=$("#deptName").val();
+			var url=ctx+"system/user/syncUserINfo?deptId="+deptId+"&deptName="+deptName;
+			$.modal.loading("数据同步中");
+			$.ajax({
+				type: "post",
+				url: url,
+				data: {},
+				success: function(data) {
+					$.modal.closeLoading();
+					queryUserList();//刷新
+				}
+			});
 		}
 		
 		$('#btnExpand').click(function() {

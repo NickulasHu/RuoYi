@@ -1,19 +1,30 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONObject;
+import com.hikvision.artemis.sdk.ArtemisHttpUtil;
+import com.hikvision.artemis.sdk.config.ArtemisConfig;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.entity.SysMenu;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.text.Convert;
+import com.ruoyi.common.json.JSONObject.JSONArray;
 import com.ruoyi.common.utils.CookieUtils;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.ServletUtils;
@@ -21,6 +32,7 @@ import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysMenuService;
+import com.ruoyi.web.core.config.HikvisionConfig;
 
 /**
  * 首页 业务处理
@@ -35,7 +47,10 @@ public class SysIndexController extends BaseController
 
     @Autowired
     private ISysConfigService configService;
-
+    
+    @Autowired
+    private HikvisionConfig hikvisionConfig;
+    
     // 系统首页
     @GetMapping("/index")
     public String index(ModelMap mmap)
@@ -93,6 +108,53 @@ public class SysIndexController extends BaseController
     {
         mmap.put("version", Global.getVersion());
         return "main";
+    }
+    
+    @PostMapping("/system/localrefresh")
+    @ResponseBody
+    public String localRefresh(String fragment,String taskName,ModelMap mmap)
+    {
+    	String result=testHiKvision();
+    	JSONArray list = new JSONArray();
+     	JSONObject item = new JSONObject();
+     	//item.put("name", result);
+     	item.put("type", "默认");
+     	item.put("date", "2020.06.10");
+     	list.add(item);
+     	mmap.put("tasks",list);
+     	mmap.put("min",2);
+     	mmap.put("max",10);
+     	//return "/demo/form/localrefresh";
+     	return result;
+    }
+    
+    private String testHiKvision() {
+    	ArtemisConfig.host=hikvisionConfig.host;
+    	ArtemisConfig.appKey=hikvisionConfig.appKey;
+    	ArtemisConfig.appSecret=hikvisionConfig.appSecret;
+    	
+    	final String getSecurityApi = "/artemis" + "/api/openApi/v1/pageSizeStatus"; // 接口路径
+    	 @SuppressWarnings("serial")
+		Map<String, String> path = new HashMap<String, String>(2) {
+    	 {
+    		 put("https://", getSecurityApi);
+    	 }
+    	 };
+    	 
+    	 JSONObject jsonBody = new JSONObject();
+    	 jsonBody.put("beginTime","2020-11-01 03:00:21");
+    	 jsonBody.put("endTime","2020-11-06 12:00:21");
+    	 jsonBody.put("pageNo",1);
+    	 jsonBody.put("pageSize",30);
+    	 jsonBody.put("personName","");
+    	 jsonBody.put("personNum","12");
+    	 jsonBody.put("personType",1);
+    	 jsonBody.put("sizeStatus",1);
+    	 String body = jsonBody.toJSONString();
+
+    	 String result = ArtemisHttpUtil.doPostStringArtemis(path, body, null,null,"application/json");
+    	 //JSONObject jsonData = JSONObject.parseObject(result);
+    	 return result;
     }
 
     // 检查初始密码是否提醒修改
