@@ -21,8 +21,8 @@ public class SubScriptInit implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		new Thread(){
 			public void run() {
-				unsubscribe();
-				subscribe();
+				/*unsubscribe();
+				subscribe();*/
 			}
 		}.start();
 	}

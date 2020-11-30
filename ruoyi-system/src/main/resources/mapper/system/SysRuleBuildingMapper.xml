@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysRuleBuildingMapper">
+    
+    <resultMap type="SysRuleBuilding" id="SysRuleBuildingResult">
+        <result property="ruleBuildId"    column="ruleBuildId"    />
+        <result property="ruleId"    column="ruleId"    />
+        <result property="buildId"    column="buildId"    />
+    </resultMap>
+
+    <sql id="selectSysRuleBuildingVo">
+        select ruleBuildId, ruleId, buildId from sys_rule_building
+    </sql>
+
+    <select id="selectSysRuleBuildingList" parameterType="SysRuleBuilding" resultMap="SysRuleBuildingResult">
+        <include refid="selectSysRuleBuildingVo"/>
+        <where>  
+            <if test="ruleId != null  and ruleId != ''"> and ruleId = #{ruleId}</if>
+            <if test="buildId != null  and buildId != ''"> and buildId = #{buildId}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysRuleBuildingById" parameterType="String" resultMap="SysRuleBuildingResult">
+        <include refid="selectSysRuleBuildingVo"/>
+        where ruleBuildId = #{ruleBuildId}
+    </select>
+        
+    <insert id="insertSysRuleBuilding" parameterType="SysRuleBuilding">
+        insert into sys_rule_building
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ruleBuildId != null">ruleBuildId,</if>
+            <if test="ruleId != null">ruleId,</if>
+            <if test="buildId != null">buildId,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ruleBuildId != null">#{ruleBuildId},</if>
+            <if test="ruleId != null">#{ruleId},</if>
+            <if test="buildId != null">#{buildId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysRuleBuilding" parameterType="SysRuleBuilding">
+        update sys_rule_building
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ruleId != null">ruleId = #{ruleId},</if>
+            <if test="buildId != null">buildId = #{buildId},</if>
+        </trim>
+        where ruleBuildId = #{ruleBuildId}
+    </update>
+
+    <delete id="deleteSysRuleBuildingById" parameterType="String">
+        delete from sys_rule_building where ruleBuildId = #{ruleBuildId}
+    </delete>
+
+    <delete id="deleteSysRuleBuildingByIds" parameterType="String">
+        delete from sys_rule_building where ruleBuildId in 
+        <foreach item="ruleBuildId" collection="array" open="(" separator="," close=")">
+            #{ruleBuildId}
+        </foreach>
+    </delete>
+
+</mapper>

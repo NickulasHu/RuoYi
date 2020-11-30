@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysRuleDeptMapper">
+    
+    <resultMap type="SysRuleDept" id="SysRuleDeptResult">
+        <result property="ruleDeptId"    column="ruleDeptId"    />
+        <result property="ruleId"    column="ruleId"    />
+        <result property="deptId"    column="deptId"    />
+    </resultMap>
+
+    <sql id="selectSysRuleDeptVo">
+        select ruleDeptId, ruleId, deptId from sys_rule_dept
+    </sql>
+
+    <select id="selectSysRuleDeptList" parameterType="SysRuleDept" resultMap="SysRuleDeptResult">
+        <include refid="selectSysRuleDeptVo"/>
+        <where>  
+            <if test="ruleId != null  and ruleId != ''"> and ruleId = #{ruleId}</if>
+            <if test="deptId != null  and deptId != ''"> and deptId = #{deptId}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysRuleDeptById" parameterType="String" resultMap="SysRuleDeptResult">
+        <include refid="selectSysRuleDeptVo"/>
+        where ruleDeptId = #{ruleDeptId}
+    </select>
+        
+    <insert id="insertSysRuleDept" parameterType="SysRuleDept">
+        insert into sys_rule_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ruleDeptId != null">ruleDeptId,</if>
+            <if test="ruleId != null">ruleId,</if>
+            <if test="deptId != null">deptId,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ruleDeptId != null">#{ruleDeptId},</if>
+            <if test="ruleId != null">#{ruleId},</if>
+            <if test="deptId != null">#{deptId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysRuleDept" parameterType="SysRuleDept">
+        update sys_rule_dept
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ruleId != null">ruleId = #{ruleId},</if>
+            <if test="deptId != null">deptId = #{deptId},</if>
+        </trim>
+        where ruleDeptId = #{ruleDeptId}
+    </update>
+
+    <delete id="deleteSysRuleDeptById" parameterType="String">
+        delete from sys_rule_dept where ruleDeptId = #{ruleDeptId}
+    </delete>
+
+    <delete id="deleteSysRuleDeptByIds" parameterType="String">
+        delete from sys_rule_dept where ruleDeptId in 
+        <foreach item="ruleDeptId" collection="array" open="(" separator="," close=")">
+            #{ruleDeptId}
+        </foreach>
+    </delete>
+
+</mapper>

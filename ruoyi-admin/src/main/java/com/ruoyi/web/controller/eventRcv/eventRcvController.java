@@ -91,7 +91,8 @@ public class eventRcvController
 	    	}
 	    }
 	    System.out.println(wholeStr);
-        try
+        
+	    try
         {
             
         }

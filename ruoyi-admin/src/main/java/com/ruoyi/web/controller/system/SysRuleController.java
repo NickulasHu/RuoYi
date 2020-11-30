@@ -149,6 +149,10 @@ public class SysRuleController extends BaseController
         List<SysDept> sysDepts=sysDeptService.selectDeptList(sysDept);
         List<SysBuilding> sysBuildings=sysBuildingService.selectSysBuildingList(sysBuilding);
         
+        //查询已配置的楼栋和组织
+        List<SysDept> configSysDepts=sysDeptService.selectDeptList(sysDept);
+        List<SysBuilding> configSysBuildings=sysBuildingService.selectSysBuildingList(sysBuilding);
+        
         
         
         mmap.put("sysRule", sysRule);
