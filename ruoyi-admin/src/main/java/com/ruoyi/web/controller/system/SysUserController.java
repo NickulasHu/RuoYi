@@ -137,14 +137,12 @@ public class SysUserController extends BaseController
     
     /**同步前删除原有人员**/
     private void DeleteAllUsers() {
-    	userService.deleteAllUsers();
-    	
-    	/*try {
+    	try {
 			@SuppressWarnings("unused")
 			int result=userService.deleteAllUsers();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 
 	@Async

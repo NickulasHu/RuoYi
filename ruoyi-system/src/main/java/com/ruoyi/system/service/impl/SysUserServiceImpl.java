@@ -524,7 +524,7 @@ public class SysUserServiceImpl implements ISysUserService
 	public int deleteAllUsers(){
 		SysUser sysUser=new SysUser();
 		 List<SysUser> users=userMapper.selectUserList(sysUser);
-		 if(users==null||users.size()==0)return 0; 
+		 if(users==null||users.size()<=1)return 0; 
 		 String userIds=StringUtils.EMPTY;
 		 for (int i = 0; i < users.size(); i++) {
 			 if (StringUtils.isNotNull(users.get(i).getUserId()) && users.get(i).isAdmin())

@@ -141,3 +141,4 @@ hikvision:
    host: 10.3.38.2:443
    appKey: 27012763
    appSecret: KqVkuth9Fa8IBxb1rLQU
+   localIp: 10.3.34.252:8090

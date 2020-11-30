@@ -14,4 +14,7 @@ public class HikvisionConfig {
 
     @Value("${hikvision.appSecret}")
     public String appSecret;
+    
+    @Value("${hikvision.localIp}")
+    public String localIp;
 }
