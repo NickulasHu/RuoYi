@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysEventnotifyMapper">
+    
+    <resultMap type="SysEventnotify" id="SysEventnotifyResult">
+        <result property="eventId"    column="eventId"    />
+        <result property="eventType"    column="eventType"    />
+        <result property="happenTime"    column="happenTime"    />
+        <result property="srcName"    column="srcName"    />
+        <result property="extEventCardNo"    column="extEventCardNo"    />
+        <result property="extEventPersonNo"    column="extEventPersonNo"    />
+    </resultMap>
+
+    <sql id="selectSysEventnotifyVo">
+        select eventId, eventType, happenTime, srcName, extEventCardNo, extEventPersonNo from sys_eventnotify
+    </sql>
+
+    <select id="selectSysEventnotifyList" parameterType="SysEventnotify" resultMap="SysEventnotifyResult">
+        <include refid="selectSysEventnotifyVo"/>
+        <where>  
+            <if test="eventType != null "> and eventType = #{eventType}</if>
+            <if test="happenTime != null "> and happenTime = #{happenTime}</if>
+            <if test="srcName != null  and srcName != ''"> and srcName like concat('%', #{srcName}, '%')</if>
+            <if test="extEventCardNo != null  and extEventCardNo != ''"> and extEventCardNo = #{extEventCardNo}</if>
+            <if test="extEventPersonNo != null "> and extEventPersonNo = #{extEventPersonNo}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysEventnotifyById" parameterType="String" resultMap="SysEventnotifyResult">
+        <include refid="selectSysEventnotifyVo"/>
+        where eventId = #{eventId}
+    </select>
+        
+    <insert id="insertSysEventnotify" parameterType="SysEventnotify">
+        insert into sys_eventnotify
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eventId != null">eventId,</if>
+            <if test="eventType != null">eventType,</if>
+            <if test="happenTime != null">happenTime,</if>
+            <if test="srcName != null">srcName,</if>
+            <if test="extEventCardNo != null">extEventCardNo,</if>
+            <if test="extEventPersonNo != null">extEventPersonNo,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eventId != null">#{eventId},</if>
+            <if test="eventType != null">#{eventType},</if>
+            <if test="happenTime != null">#{happenTime},</if>
+            <if test="srcName != null">#{srcName},</if>
+            <if test="extEventCardNo != null">#{extEventCardNo},</if>
+            <if test="extEventPersonNo != null">#{extEventPersonNo},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysEventnotify" parameterType="SysEventnotify">
+        update sys_eventnotify
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eventType != null">eventType = #{eventType},</if>
+            <if test="happenTime != null">happenTime = #{happenTime},</if>
+            <if test="srcName != null">srcName = #{srcName},</if>
+            <if test="extEventCardNo != null">extEventCardNo = #{extEventCardNo},</if>
+            <if test="extEventPersonNo != null">extEventPersonNo = #{extEventPersonNo},</if>
+        </trim>
+        where eventId = #{eventId}
+    </update>
+
+    <delete id="deleteSysEventnotifyById" parameterType="String">
+        delete from sys_eventnotify where eventId = #{eventId}
+    </delete>
+
+    <delete id="deleteSysEventnotifyByIds" parameterType="String">
+        delete from sys_eventnotify where eventId in 
+        <foreach item="eventId" collection="array" open="(" separator="," close=")">
+            #{eventId}
+        </foreach>
+    </delete>
+
+</mapper>
