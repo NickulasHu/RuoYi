@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysUserDeptMapper">
+    
+    <resultMap type="SysUserDept" id="SysUserDeptResult">
+        <result property="userDeptId"    column="userDeptId"    />
+        <result property="userId"    column="userId"    />
+        <result property="deptId"    column="deptId"    />
+    </resultMap>
+
+    <sql id="selectSysUserDeptVo">
+        select userDeptId, userId, deptId from sys_user_dept
+    </sql>
+
+    <select id="selectSysUserDeptList" parameterType="SysUserDept" resultMap="SysUserDeptResult">
+        <include refid="selectSysUserDeptVo"/>
+        <where>  
+            <if test="userId != null  and userId != ''"> and userId = #{userId}</if>
+            <if test="deptId != null "> and deptId = #{deptId}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysUserDeptById" parameterType="String" resultMap="SysUserDeptResult">
+        <include refid="selectSysUserDeptVo"/>
+        where userDeptId = #{userDeptId}
+    </select>
+        
+    <insert id="insertSysUserDept" parameterType="SysUserDept">
+        insert into sys_user_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userDeptId != null">userDeptId,</if>
+            <if test="userId != null">userId,</if>
+            <if test="deptId != null">deptId,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userDeptId != null">#{userDeptId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="deptId != null">#{deptId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysUserDept" parameterType="SysUserDept">
+        update sys_user_dept
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">userId = #{userId},</if>
+            <if test="deptId != null">deptId = #{deptId},</if>
+        </trim>
+        where userDeptId = #{userDeptId}
+    </update>
+
+    <delete id="deleteSysUserDeptById" parameterType="String">
+        delete from sys_user_dept where userDeptId = #{userDeptId}
+    </delete>
+
+    <delete id="deleteSysUserDeptByIds" parameterType="String">
+        delete from sys_user_dept where userDeptId in 
+        <foreach item="userDeptId" collection="array" open="(" separator="," close=")">
+            #{userDeptId}
+        </foreach>
+    </delete>
+
+	 <select id="selectConfigDeptIds" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT deptId from sys_user_dept
+        where userId = #{userId}
+    </select>
+    
+    <delete id="deleteConfigDepts" parameterType="java.lang.Long">
+        delete from sys_user_dept where userId = #{userId}
+    </delete>
+</mapper>

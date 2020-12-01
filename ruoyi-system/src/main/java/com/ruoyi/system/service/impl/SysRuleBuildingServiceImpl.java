@@ -91,4 +91,14 @@ public class SysRuleBuildingServiceImpl implements ISysRuleBuildingService
     {
         return sysRuleBuildingMapper.deleteSysRuleBuildingById(ruleBuildId);
     }
+
+	@Override
+	public List<String> selectConfigBuildingIds(String ruleId) {
+		return sysRuleBuildingMapper.selectConfigBuildingIds(ruleId);
+	}
+
+	@Override
+	public int deleteConfigBuildings(String ruleId) {
+		return sysRuleBuildingMapper.deleteConfigBuildings(ruleId);
+	}
 }

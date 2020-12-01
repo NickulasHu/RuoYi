@@ -58,4 +58,8 @@ public interface SysRuleBuildingMapper
      * @return 结果
      */
     public int deleteSysRuleBuildingByIds(String[] ruleBuildIds);
+
+	public List<String> selectConfigBuildingIds(String ruleId);
+
+	public int deleteConfigBuildings(String ruleId);
 }

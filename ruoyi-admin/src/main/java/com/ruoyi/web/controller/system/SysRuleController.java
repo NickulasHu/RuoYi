@@ -27,10 +27,15 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.system.domain.SysBuilding;
 import com.ruoyi.system.domain.SysRule;
+import com.ruoyi.system.domain.SysRuleBuilding;
+import com.ruoyi.system.domain.SysRuleDept;
 import com.ruoyi.system.service.ISysBuildingService;
 import com.ruoyi.system.service.ISysDeptService;
+import com.ruoyi.system.service.ISysRuleBuildingService;
+import com.ruoyi.system.service.ISysRuleDeptService;
 import com.ruoyi.system.service.ISysRuleService;
 import com.ruoyi.web.core.config.HikvisionConfig;
 
@@ -57,6 +62,12 @@ public class SysRuleController extends BaseController
     
     @Autowired
     private HikvisionConfig hikvisionConfig;
+    
+    @Autowired
+    private ISysRuleBuildingService ruleBuildingService;
+    
+    @Autowired
+    private ISysRuleDeptService ruleDeptService;
 
     @RequiresPermissions("system:rule:view")
     @GetMapping()
@@ -150,14 +161,29 @@ public class SysRuleController extends BaseController
         List<SysBuilding> sysBuildings=sysBuildingService.selectSysBuildingList(sysBuilding);
         
         //查询已配置的楼栋和组织
-        List<SysDept> configSysDepts=sysDeptService.selectDeptList(sysDept);
-        List<SysBuilding> configSysBuildings=sysBuildingService.selectSysBuildingList(sysBuilding);
+        List<Long> configDeptIdList=ruleDeptService.selectConfigDeptIds(ruleId);
+        List<String> configBuildingIdList=ruleBuildingService.selectConfigBuildingIds(ruleId);
+        String configDeptIds="";
+        String configBuildingIds="";
+        if(configDeptIdList.size()>0) {
+        	for (int i = 0; i < configDeptIdList.size(); i++) {
+        		if(i==0)configDeptIds+=configDeptIdList.get(i).toString();
+        		configDeptIds += ","+ configDeptIdList.get(i).toString();
+			}
+        }
         
-        
+        if(configBuildingIdList.size()>0) {
+        	for (int i = 0; i < configBuildingIdList.size(); i++) {
+        		if(i==0)configBuildingIds+=configBuildingIdList.get(i).toString();
+        		configBuildingIds += ","+ configBuildingIdList.get(i).toString();
+			}
+        }
         
         mmap.put("sysRule", sysRule);
         mmap.put("sysDepts", sysDepts);
         mmap.put("sysBuildings", sysBuildings);
+        mmap.put("configDeptIds", configDeptIds);
+        mmap.put("configBuildingIds", configBuildingIds);
         return prefix + "/config";
     }
     
@@ -170,9 +196,39 @@ public class SysRuleController extends BaseController
     @ResponseBody
     public AjaxResult configSave(SysRule sysRule,String dormId,String deptId)
     {
-    	System.err.println(dormId);
-    	System.err.println(deptId);
-        //return toAjax(sysRuleService.updateSysRule(sysRule));
+    	String ruleId=sysRule.getRuleId();
+    	//删除此规则原关系项
+    	ruleDeptService.deleteConfigDepts(ruleId);
+    	ruleBuildingService.deleteConfigBuildings(ruleId);
+    	//保存新的关系项
+    	if(dormId!=null) {
+    		String[] dormIds=dormId.split(",");
+    		if(dormIds.length>0) {
+        		for (int i = 0; i < dormIds.length; i++) {
+    				SysRuleBuilding item=new SysRuleBuilding();
+    				item.setRuleBuildId(IdUtils.randomUUID());
+    				item.setRuleId(ruleId);
+    				item.setBuildId(dormIds[i]);
+    				item.setCreateBy(ShiroUtils.getLoginName());
+    				ruleBuildingService.insertSysRuleBuilding(item);
+    			}
+        	}
+    	}
+    	
+    	if(deptId!=null) {
+    		String[] deptIds=deptId.split(",");
+        	if(deptIds.length>0) {
+        		for (int i = 0; i < deptIds.length; i++) {
+    				SysRuleDept item=new SysRuleDept();
+    				item.setRuleDeptId(IdUtils.randomUUID());
+    				item.setRuleId(ruleId);
+    				item.setDeptId(Long.parseLong(deptIds[i]));
+    				item.setCreateBy(ShiroUtils.getLoginName());
+    				ruleDeptService.insertSysRuleDept(item);
+    			}
+        	}
+    	}
+    	
     	return AjaxResult.success("请求已发送");
     }
 

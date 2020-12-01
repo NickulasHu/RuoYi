@@ -58,4 +58,8 @@ public interface ISysRuleBuildingService
      * @return 结果
      */
     public int deleteSysRuleBuildingById(String ruleBuildId);
+
+	public List<String> selectConfigBuildingIds(String ruleId);
+
+	public int deleteConfigBuildings(String ruleId);
 }

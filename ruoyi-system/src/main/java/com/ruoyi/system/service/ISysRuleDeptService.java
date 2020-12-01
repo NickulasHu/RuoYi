@@ -58,4 +58,8 @@ public interface ISysRuleDeptService
      * @return 结果
      */
     public int deleteSysRuleDeptById(String ruleDeptId);
+
+	public List<Long> selectConfigDeptIds(String ruleId);
+
+	public int deleteConfigDepts(String ruleId);
 }

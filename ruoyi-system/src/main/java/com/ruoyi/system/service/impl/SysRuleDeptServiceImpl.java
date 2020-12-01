@@ -91,4 +91,14 @@ public class SysRuleDeptServiceImpl implements ISysRuleDeptService
     {
         return sysRuleDeptMapper.deleteSysRuleDeptById(ruleDeptId);
     }
+
+	@Override
+	public List<Long> selectConfigDeptIds(String ruleId) {
+		return sysRuleDeptMapper.selectConfigDeptIds(ruleId);
+	}
+
+	@Override
+	public int deleteConfigDepts(String ruleId) {
+		return sysRuleDeptMapper.deleteConfigDepts(ruleId);
+	}
 }

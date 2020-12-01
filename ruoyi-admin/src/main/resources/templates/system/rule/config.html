@@ -22,9 +22,16 @@
                 <label class="col-sm-2 control-label">选择楼栋：</label>
                 <div class="col-sm-10">
                      <div th:each="build : ${sysBuildings}" class="checkbox check-box">
-                         <label>
-                         	<input type="checkbox" value="" name="dormId" th:value="${build.dormId}" th:text="${build.dormName}"> <i></i>
-                         </label>
+                         <div th:if="${#strings.containsIgnoreCase(configBuildingIds,build.dormId)}">
+                         	<label>
+	                         	<input type="checkbox" value="" checked="" name="dormId" th:value="${build.dormId}" th:text="${build.dormName}"> <i></i>
+	                         </label>
+                         </div>
+                         <div th:unless="${#strings.containsIgnoreCase(configBuildingIds,build.dormId)}">
+                         	<label>
+	                         	<input type="checkbox" value="" name="dormId" th:value="${build.dormId}" th:text="${build.dormName}"> <i></i>
+	                         </label>
+                         </div>
                      </div>
                  </div>
             </div>
@@ -32,9 +39,16 @@
                 <label class="col-sm-2 control-label">选择组织：</label>
                 <div class="col-sm-10">
                      <div th:each="dept : ${sysDepts}" class="checkbox check-box">
-                         <label>
-                         	<input type="checkbox" value="" name="deptId" th:value="${dept.deptId}" th:text="${dept.deptName}"> <i></i>
-                         </label>
+                         <div th:if="${#strings.containsIgnoreCase(configDeptIds,dept.deptId)}">
+	                         <label>
+	                         	<input type="checkbox" value="" checked="" name="deptId" th:value="${dept.deptId}" th:text="${dept.deptName}"> <i></i>
+	                         </label>
+	                     </div>
+	                     <div th:unless="${#strings.containsIgnoreCase(configDeptIds,dept.deptId)}">
+	                         <label>
+	                         	<input type="checkbox" value="" name="deptId" th:value="${dept.deptId}" th:text="${dept.deptName}"> <i></i>
+	                         </label>
+	                     </div>
                      </div>
                  </div>
             </div>

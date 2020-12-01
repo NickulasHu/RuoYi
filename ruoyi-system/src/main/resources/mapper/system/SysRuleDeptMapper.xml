@@ -18,13 +18,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSysRuleDeptVo"/>
         <where>  
             <if test="ruleId != null  and ruleId != ''"> and ruleId = #{ruleId}</if>
-            <if test="deptId != null  and deptId != ''"> and deptId = #{deptId}</if>
+            <if test="deptId != null"> and deptId = #{deptId}</if>
         </where>
     </select>
     
     <select id="selectSysRuleDeptById" parameterType="String" resultMap="SysRuleDeptResult">
         <include refid="selectSysRuleDeptVo"/>
         where ruleDeptId = #{ruleDeptId}
+    </select>
+    
+    <select id="selectConfigDeptIds" parameterType="String" resultType="java.lang.Long">
+        SELECT deptId from sys_rule_dept
+        where ruleId = #{ruleId}
     </select>
         
     <insert id="insertSysRuleDept" parameterType="SysRuleDept">
@@ -61,4 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+	<delete id="deleteConfigDepts" parameterType="String">
+        delete from sys_rule_dept where ruleId = #{ruleId}
+    </delete>
 </mapper>

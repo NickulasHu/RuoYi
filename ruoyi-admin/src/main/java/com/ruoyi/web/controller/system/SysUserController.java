@@ -27,6 +27,7 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -36,8 +37,11 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.framework.shiro.service.SysPasswordService;
+import com.ruoyi.system.domain.SysUserDept;
+import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysPostService;
 import com.ruoyi.system.service.ISysRoleService;
+import com.ruoyi.system.service.ISysUserDeptService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.web.core.config.HikvisionConfig;
 
@@ -66,6 +70,12 @@ public class SysUserController extends BaseController
     
     @Autowired
     private HikvisionConfig hikvisionConfig;
+    
+    @Autowired
+    private ISysUserDeptService sysUserDeptService;
+    
+    @Autowired
+    private ISysDeptService deptService;
 
     @RequiresPermissions("system:user:view")
     @GetMapping()
@@ -292,6 +302,65 @@ public class SysUserController extends BaseController
         }
         user.setUpdateBy(ShiroUtils.getLoginName());
         return toAjax(userService.updateUser(user));
+    }
+    
+    /**
+     * 配置管理者对应的组织
+     */
+    @GetMapping("/config/{userId}")
+    public String config(@PathVariable("userId") Long userId, ModelMap mmap)
+    {
+    	SysUser sysUser = userService.selectUserById(userId);
+        //查询所有组织
+        SysDept sysDept=new SysDept();
+        List<SysDept> sysDepts=deptService.selectDeptList(sysDept);
+        
+        //查询已配置的组织
+        List<Long> configDeptIdList=sysUserDeptService.selectConfigDeptIds(userId);
+        String configDeptIds="";
+        if(configDeptIdList.size()>0) {
+        	for (int i = 0; i < configDeptIdList.size(); i++) {
+        		if(i==0)configDeptIds+=configDeptIdList.get(i).toString();
+        		configDeptIds += ","+ configDeptIdList.get(i).toString();
+			}
+        }
+        
+        mmap.put("sysUser", sysUser);
+        mmap.put("sysDepts", sysDepts);
+        mmap.put("configDeptIds", configDeptIds);
+        return prefix + "/config";
+    }
+    
+    /**
+     * 保存规则配置
+     */
+    @RequiresPermissions("system:user:edit")
+    @Log(title = "用户", businessType = BusinessType.UPDATE)
+    @PostMapping("/config")
+    @ResponseBody
+    public AjaxResult configSave(SysUser sysUser,String deptId)
+    {
+    	Long userId=sysUser.getUserId();
+    	System.err.println(deptId);
+    	//删除此规则原关系项
+    	sysUserDeptService.deleteConfigDepts(userId);
+    	//保存新的关系项
+    	if(deptId!=null) {
+    		String[] deptIds=deptId.split(",");
+        	
+        	if(deptIds.length>0) {
+        		for (int i = 0; i < deptIds.length; i++) {
+    				SysUserDept item=new SysUserDept();
+    				item.setUserDeptId(IdUtils.randomUUID());
+    				item.setUserId(userId);
+    				item.setDeptId(Long.parseLong(deptIds[i]));
+    				item.setCreateBy(ShiroUtils.getLoginName());
+    				sysUserDeptService.insertSysUserDept(item);
+    			}
+        	}
+    	}
+    	
+    	return AjaxResult.success("请求已发送");
     }
 
     @RequiresPermissions("system:user:resetPwd")

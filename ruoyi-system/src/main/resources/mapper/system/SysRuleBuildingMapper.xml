@@ -26,6 +26,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSysRuleBuildingVo"/>
         where ruleBuildId = #{ruleBuildId}
     </select>
+    
+     <select id="selectConfigBuildingIds" parameterType="String" resultType="java.lang.String">
+        SELECT buildId from sys_rule_building
+        where ruleId = #{ruleId}
+    </select>
         
     <insert id="insertSysRuleBuilding" parameterType="SysRuleBuilding">
         insert into sys_rule_building
@@ -61,4 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+	<delete id="deleteConfigBuildings" parameterType="String">
+        delete from sys_rule_building where ruleId = #{ruleId}
+    </delete>
 </mapper>

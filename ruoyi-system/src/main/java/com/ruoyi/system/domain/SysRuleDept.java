@@ -24,7 +24,7 @@ public class SysRuleDept extends BaseEntity
 
     /** 部门Id */
     @Excel(name = "部门Id")
-    private String deptId;
+    private Long deptId;
 
     public void setRuleDeptId(String ruleDeptId) 
     {
@@ -44,17 +44,16 @@ public class SysRuleDept extends BaseEntity
     {
         return ruleId;
     }
-    public void setDeptId(String deptId) 
-    {
-        this.deptId = deptId;
-    }
 
-    public String getDeptId() 
-    {
-        return deptId;
-    }
+    public Long getDeptId() {
+		return deptId;
+	}
 
-    @Override
+	public void setDeptId(Long deptId) {
+		this.deptId = deptId;
+	}
+
+	@Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("ruleDeptId", getRuleDeptId())

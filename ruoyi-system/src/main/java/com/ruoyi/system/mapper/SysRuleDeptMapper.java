@@ -58,4 +58,8 @@ public interface SysRuleDeptMapper
      * @return 结果
      */
     public int deleteSysRuleDeptByIds(String[] ruleDeptIds);
+
+	public List<Long> selectConfigDeptIds(String ruleId);
+
+	public int deleteConfigDepts(String ruleId);
 }
