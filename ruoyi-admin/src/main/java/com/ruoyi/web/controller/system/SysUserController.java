@@ -341,11 +341,10 @@ public class SysUserController extends BaseController
     public AjaxResult configSave(SysUser sysUser,String deptId)
     {
     	Long userId=sysUser.getUserId();
-    	System.err.println(deptId);
     	//删除此规则原关系项
     	sysUserDeptService.deleteConfigDepts(userId);
     	//保存新的关系项
-    	if(deptId!=null) {
+    	if(!StringUtils.isEmpty(deptId)) {
     		String[] deptIds=deptId.split(",");
         	
         	if(deptIds.length>0) {

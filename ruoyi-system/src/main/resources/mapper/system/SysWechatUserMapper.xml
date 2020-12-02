@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysWechatUserMapper">
+    
+    <resultMap type="SysWechatUser" id="SysWechatUserResult">
+        <result property="openId"    column="openId"    />
+        <result property="nickName"    column="nickName"    />
+        <result property="userId"    column="userId"    />
+        <result property="sex"    column="sex"    />
+        <result property="headimgurl"    column="headimgurl"    />
+        <result property="unionid"    column="unionid"    />
+    </resultMap>
+
+    <sql id="selectSysWechatUserVo">
+        select openId, nickName, userId, sex, headimgurl, unionid from sys_wechat_user
+    </sql>
+
+    <select id="selectSysWechatUserList" parameterType="SysWechatUser" resultMap="SysWechatUserResult">
+        <include refid="selectSysWechatUserVo"/>
+        <where>  
+            <if test="nickName != null  and nickName != ''"> and nickName like concat('%', #{nickName}, '%')</if>
+            <if test="userId != null "> and userId = #{userId}</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="headimgurl != null  and headimgurl != ''"> and headimgurl = #{headimgurl}</if>
+            <if test="unionid != null  and unionid != ''"> and unionid = #{unionid}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysWechatUserById" parameterType="String" resultMap="SysWechatUserResult">
+        <include refid="selectSysWechatUserVo"/>
+        where openId = #{openId}
+    </select>
+        
+    <insert id="insertSysWechatUser" parameterType="SysWechatUser">
+        insert into sys_wechat_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="openId != null">openId,</if>
+            <if test="nickName != null">nickName,</if>
+            <if test="userId != null">userId,</if>
+            <if test="sex != null">sex,</if>
+            <if test="headimgurl != null">headimgurl,</if>
+            <if test="unionid != null">unionid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="openId != null">#{openId},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="headimgurl != null">#{headimgurl},</if>
+            <if test="unionid != null">#{unionid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysWechatUser" parameterType="SysWechatUser">
+        update sys_wechat_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nickName != null">nickName = #{nickName},</if>
+            <if test="userId != null">userId = #{userId},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="headimgurl != null">headimgurl = #{headimgurl},</if>
+            <if test="unionid != null">unionid = #{unionid},</if>
+        </trim>
+        where openId = #{openId}
+    </update>
+
+    <delete id="deleteSysWechatUserById" parameterType="String">
+        delete from sys_wechat_user where openId = #{openId}
+    </delete>
+
+    <delete id="deleteSysWechatUserByIds" parameterType="String">
+        delete from sys_wechat_user where openId in 
+        <foreach item="openId" collection="array" open="(" separator="," close=")">
+            #{openId}
+        </foreach>
+    </delete>
+
+</mapper>

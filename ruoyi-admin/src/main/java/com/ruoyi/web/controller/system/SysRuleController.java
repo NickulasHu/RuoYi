@@ -201,7 +201,7 @@ public class SysRuleController extends BaseController
     	ruleDeptService.deleteConfigDepts(ruleId);
     	ruleBuildingService.deleteConfigBuildings(ruleId);
     	//保存新的关系项
-    	if(dormId!=null) {
+    	if(!StringUtils.isEmpty(dormId)) {
     		String[] dormIds=dormId.split(",");
     		if(dormIds.length>0) {
         		for (int i = 0; i < dormIds.length; i++) {
@@ -215,7 +215,7 @@ public class SysRuleController extends BaseController
         	}
     	}
     	
-    	if(deptId!=null) {
+    	if(!StringUtils.isEmpty(deptId)) {
     		String[] deptIds=deptId.split(",");
         	if(deptIds.length>0) {
         		for (int i = 0; i < deptIds.length; i++) {
