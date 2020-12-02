@@ -1,15 +1,8 @@
 package com.ruoyi.web.controller.wechat;
 
-import java.util.ArrayList;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.system.service.ISysUserService;
-import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.api.WxMpUserService;
-import me.chanjar.weixin.mp.bean.result.WxMpUserList;
 
 @Controller
 public class WechatController extends BaseController{

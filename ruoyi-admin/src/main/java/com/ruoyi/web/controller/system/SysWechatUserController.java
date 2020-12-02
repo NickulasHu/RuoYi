@@ -1,8 +1,10 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.Date;
 import java.util.List;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +12,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.domain.SysWechatUser;
 import com.ruoyi.system.service.ISysWechatUserService;
+import com.ruoyi.web.controller.wechat.WxMpServiceInstance;
+import com.thoughtworks.xstream.core.util.WeakCache;
+
+import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import me.chanjar.weixin.mp.bean.result.WxMpUserList;
+import net.sf.jsqlparser.expression.DateTimeLiteralExpression.DateTime;
+
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
@@ -33,7 +46,7 @@ public class SysWechatUserController extends BaseController
 
     @Autowired
     private ISysWechatUserService sysWechatUserService;
-
+    
     @RequiresPermissions("system:wechatUser:view")
     @GetMapping()
     public String wechatUser()
@@ -123,4 +136,52 @@ public class SysWechatUserController extends BaseController
     {
         return toAjax(sysWechatUserService.deleteSysWechatUserByIds(ids));
     }
+    
+    /**同步用户数据**/
+    @RequiresPermissions("system:wechatUser:view")
+    @PostMapping("/syncUserINfo")
+    @ResponseBody
+    public AjaxResult syncUserINfo()
+    {
+    	getWechatUserFromTencet();
+    	//如果请求参数出错，需报出异常
+    	return AjaxResult.success("success");
+    }
+
+    @Async
+	private void getWechatUserFromTencet() {
+		// 获取openIds
+    	WxMpService wxMpService = WxMpServiceInstance.getInstance().getWxMpService();
+    	try {
+			 WxMpUserList openIdsData=wxMpService.getUserService().userList(null);
+			 List<String> openids=openIdsData.getOpenids();
+			 if(openids!=null&&openids.size()>0) {
+				 for (int i = 0; i < openids.size(); i++) {
+					 WxMpUser wxMpUser=wxMpService.getUserService().userInfo(openids.get(i));
+					 
+					 if(wxMpUser!=null) {
+						//先查询，是否已存在，存在则更新
+						 SysWechatUser orignalUser=sysWechatUserService.selectSysWechatUserById(wxMpUser.getOpenId());
+						 if(orignalUser!=null) {
+							 orignalUser.setNickName(wxMpUser.getNickname());
+							 orignalUser.setHeadimgurl(wxMpUser.getHeadImgUrl());
+							 sysWechatUserService.updateSysWechatUser(orignalUser);
+						 }else {
+							//不存在则创建
+							 SysWechatUser item=new SysWechatUser();
+							 item.setOpenId(wxMpUser.getOpenId());
+							 item.setNickName(wxMpUser.getNickname());
+							 item.setHeadimgurl(wxMpUser.getHeadImgUrl());
+							 item.setSex(wxMpUser.getSex());
+							 item.setUnionid(wxMpUser.getUnionId());
+							 sysWechatUserService.insertSysWechatUser(item);
+						 }
+					 }
+				}
+			 }
+
+		} catch (WxErrorException e) {
+			e.printStackTrace();
+		}
+	}
 }

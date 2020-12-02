@@ -28,7 +28,7 @@ public class SysWechatUser extends BaseEntity
 
     /** 性别 */
     @Excel(name = "性别")
-    private Long sex;
+    private String sex;
 
     /** 头像 */
     @Excel(name = "头像")
@@ -65,16 +65,16 @@ public class SysWechatUser extends BaseEntity
     {
         return userId;
     }
-    public void setSex(Long sex) 
-    {
-        this.sex = sex;
-    }
+    
+    public String getSex() {
+		return sex;
+	}
 
-    public Long getSex() 
-    {
-        return sex;
-    }
-    public void setHeadimgurl(String headimgurl) 
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public void setHeadimgurl(String headimgurl) 
     {
         this.headimgurl = headimgurl;
     }

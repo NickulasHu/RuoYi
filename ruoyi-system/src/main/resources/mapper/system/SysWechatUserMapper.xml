@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="nickName != null  and nickName != ''"> and nickName like concat('%', #{nickName}, '%')</if>
             <if test="userId != null "> and userId = #{userId}</if>
-            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="sex != null and sex != ''"> and sex = #{sex}</if>
             <if test="headimgurl != null  and headimgurl != ''"> and headimgurl = #{headimgurl}</if>
             <if test="unionid != null  and unionid != ''"> and unionid = #{unionid}</if>
         </where>

@@ -142,3 +142,9 @@ hikvision:
    appKey: 27012763
    appSecret: KqVkuth9Fa8IBxb1rLQU
    localIp: 10.3.34.252:8090
+
+wechat:
+   appId: wxb46e5c71a795750a
+   secret: a0adad96625ff3db6e56491d48c98aed
+   token: hdoit_pluto
+   aesKey: eiHCyS06N3nSD4WF8IktpiJYyQaSNOi47dvxgSRX795
