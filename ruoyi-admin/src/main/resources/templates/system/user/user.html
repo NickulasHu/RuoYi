@@ -36,23 +36,15 @@
 						<div class="select-list">
 							<ul>
 								<li>
+									姓名：<input type="text" name="userName"/>
+								</li>
+								<li>
 									登录名称：<input type="text" name="loginName"/>
 								</li>
 								<li>
 									手机号码：<input type="text" name="phonenumber"/>
 								</li>
-								<li>
-									用户状态：<select name="status" th:with="type=${@dict.getType('sys_normal_disable')}">
-										<option value="">所有</option>
-										<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
-									</select>
-								</li>
-								<li class="select-time">
-									<label>创建时间： </label>
-									<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
-									<span>-</span>
-									<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
-								</li>
+								
 								<li>
 									<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
 								    <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -216,7 +208,7 @@
 				data: {},
 				success: function(data) {
 					$.modal.closeLoading();
-					queryUserList();//刷新
+					$.table.refresh();//刷新
 				}
 			});
 		}

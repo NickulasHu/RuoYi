@@ -58,4 +58,6 @@ public interface SysWechatUserMapper
      * @return 结果
      */
     public int deleteSysWechatUserByIds(String[] openIds);
+
+	public int deleteAllSysWechatUserByIds();
 }

@@ -91,4 +91,9 @@ public class SysWechatUserServiceImpl implements ISysWechatUserService
     {
         return sysWechatUserMapper.deleteSysWechatUserById(openId);
     }
+
+	@Override
+	public int deleteAllSysWechatUserByIds() {
+		return sysWechatUserMapper.deleteAllSysWechatUserByIds();
+	}
 }

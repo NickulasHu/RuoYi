@@ -341,7 +341,7 @@ public class SysUserController extends BaseController
     public AjaxResult configSave(SysUser sysUser,String deptId)
     {
     	Long userId=sysUser.getUserId();
-    	//删除此规则原关系项
+    	//删除此人原管理组织
     	sysUserDeptService.deleteConfigDepts(userId);
     	//保存新的关系项
     	if(!StringUtils.isEmpty(deptId)) {

@@ -1,7 +1,8 @@
 package com.ruoyi.web.controller.system;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -13,24 +14,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.CxSelect;
+import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.SysWechatUser;
+import com.ruoyi.system.service.ISysDeptService;
+import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.service.ISysWechatUserService;
 import com.ruoyi.web.controller.wechat.WxMpServiceInstance;
-import com.thoughtworks.xstream.core.util.WeakCache;
 
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import me.chanjar.weixin.mp.bean.result.WxMpUserList;
-import net.sf.jsqlparser.expression.DateTimeLiteralExpression.DateTime;
-
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 微信用户信息Controller
@@ -46,6 +49,12 @@ public class SysWechatUserController extends BaseController
 
     @Autowired
     private ISysWechatUserService sysWechatUserService;
+    
+    @Autowired
+    private ISysDeptService deptService;
+    
+    @Autowired
+    private ISysUserService userService;
     
     @RequiresPermissions("system:wechatUser:view")
     @GetMapping()
@@ -137,6 +146,15 @@ public class SysWechatUserController extends BaseController
         return toAjax(sysWechatUserService.deleteSysWechatUserByIds(ids));
     }
     
+    /**删除所有用户数据**/
+    @RequiresPermissions("system:wechatUser:remove")
+    @PostMapping("/removeAll")
+    @ResponseBody
+    public AjaxResult removeAll()
+    {
+    	return toAjax(sysWechatUserService.deleteAllSysWechatUserByIds());
+    }
+    
     /**同步用户数据**/
     @RequiresPermissions("system:wechatUser:view")
     @PostMapping("/syncUserINfo")
@@ -184,4 +202,80 @@ public class SysWechatUserController extends BaseController
 			e.printStackTrace();
 		}
 	}
+    
+    /**
+     * 配置管理者对应的组织
+     */
+    @GetMapping("/config/{openId}")
+    public String config(@PathVariable("openId") String openId, ModelMap mmap)
+    {
+    	SysWechatUser sysWechatUser = sysWechatUserService.selectSysWechatUserById(openId);
+        
+      //查询所有二级联动数据
+        List<CxSelect> cxList = new ArrayList<CxSelect>();
+        cxList=getDeptAndUserData();
+        
+        mmap.put("data", JSON.toJSON(cxList));
+        mmap.put("sysWechatUser", sysWechatUser);
+        return prefix + "/config";
+    }
+    
+    private List<CxSelect> getDeptAndUserData() 
+    {
+        List<CxSelect> cxList = new ArrayList<CxSelect>();
+        
+        SysDept sysDept=new SysDept();
+        List<SysDept> sysDepts=deptService.selectDeptList(sysDept);
+        if(sysDepts==null||sysDepts.size()==0)return null;
+        for (int i = 0; i < sysDepts.size(); i++) {
+        	SysDept sysDeptItem= sysDepts.get(i);
+			CxSelect item = new CxSelect();
+			List<CxSelect> subList;
+			
+			item.setN(sysDeptItem.getDeptName());
+			item.setV(Long.toString(sysDeptItem.getDeptId()));
+			
+			SysUser paramUser = new SysUser();
+			paramUser.setDeptId(sysDeptItem.getDeptId());
+			List<SysUser> uList = userService.selectUserList(paramUser);
+			if(uList==null||uList.size()==0) {
+				subList = new ArrayList<CxSelect>();
+			}else {
+				subList = new ArrayList<CxSelect>();
+				for (int j = 0; j < uList.size(); j++) {
+					SysUser sysUser=uList.get(j);
+					CxSelect userItem = new CxSelect();
+					userItem.setN(sysUser.getUserName());
+					userItem.setV(Long.toString(sysUser.getUserId()));
+					subList.add(userItem);
+				}
+				item.setS(subList);
+			}
+			cxList.add(item);
+		}
+		return cxList;
+	}
+
+	/**
+     * 保存规则配置
+     */
+    @RequiresPermissions("system:wechatUser:edit")
+    @Log(title = "用户", businessType = BusinessType.UPDATE)
+    @PostMapping("/config")
+    @ResponseBody
+    public AjaxResult configSave(SysWechatUser sysWechatUser)
+    {
+    	if(sysWechatUser.getUserId()!=null) {
+    		SysUser user=userService.selectUserById(sysWechatUser.getUserId());
+    		if(user!=null) {
+    			sysWechatUser.setUserName(user.getUserName());
+    		}
+    	}
+    	
+    	if(sysWechatUserService.updateSysWechatUser(sysWechatUser)>0) {
+    		return AjaxResult.success("success");
+    	}else {
+    		return AjaxResult.error("failed");
+    	}
+    }
 }

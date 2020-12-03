@@ -25,6 +25,10 @@ public class SysWechatUser extends BaseEntity
     /** 用户ID */
     @Excel(name = "用户ID")
     private Long userId;
+    
+    /** 用户名称*/
+    @Excel(name = "用户名称")
+    private String userName;
 
     /** 性别 */
     @Excel(name = "性别")
@@ -66,7 +70,15 @@ public class SysWechatUser extends BaseEntity
         return userId;
     }
     
-    public String getSex() {
+    public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getSex() {
 		return sex;
 	}
 

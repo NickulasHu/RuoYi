@@ -15,6 +15,10 @@
                                 <input type="text" name="nickName"/>
                             </li>
                             <li>
+                                <label>姓名：</label>
+                                <input type="text" name="userName"/>
+                            </li>
+                            <li>
                                 <label>用户ID：</label>
                                 <input type="text" name="userId"/>
                             </li>
@@ -34,6 +38,9 @@
 		        <a class="btn btn-info" onclick="openConfigModel()" shiro:hasPermission="system:wechatUser:edit">
 		            <i class="fa fa-chain"></i> 配置人员关系
 		        </a>
+		        <a class="btn btn-danger" onclick="removeAll()" shiro:hasPermission="system:user:remove">
+	                <i class="fa fa-remove"></i> 删除全部
+	            </a>
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table"></table>
@@ -63,19 +70,24 @@
                         visible: false
                     },
                     {
-                        field: 'nickName',
-                        title: '昵称'
-                    },
-                    {
-                        field: 'sex',
-                        title: '性别'
-                    },
-                    {
                         title: '头像',
                         formatter: function(value, row, index) {
                         	return $.table.imageView(row.headimgurl);
     				    }
                     },
+                    {
+                        field: 'nickName',
+                        title: '昵称'
+                    },
+                    {
+                        field: 'userName',
+                        title: '姓名'
+                    },
+                    {
+                        field: 'sex',
+                        title: '性别'
+                    },
+                   
                     {
                         title: '操作',
                         align: 'center',
@@ -107,6 +119,28 @@
 				}
 			});
 		}
+        
+        function openConfigModel(){
+        	var openId =$.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+        	var url=ctx+"system/wechatUser/config/"+openId;
+        	$.modal.open("人员配置", url);
+        }
+        
+        function removeAll(){
+        	$.modal.confirm("确认要全部删除吗?", function() {
+        		var url=ctx+"system/wechatUser/removeAll";
+    			$.modal.loading("数据同步中");
+    			$.ajax({
+    				type: "post",
+    				url: url,
+    				data: {},
+    				success: function(data) {
+    					$.modal.closeLoading();
+    					$.table.refresh();//刷新
+    				}
+    			});
+	    	});
+        }
     </script>
 </body>
 </html>
