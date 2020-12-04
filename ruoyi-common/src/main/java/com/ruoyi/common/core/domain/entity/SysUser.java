@@ -34,6 +34,14 @@ public class SysUser extends BaseEntity
 
     /** 角色ID */
     private Long roleId;
+    
+    /** 海康部门ID */
+    @Excel(name = "海康部门ID")
+    private String orgId;
+    
+    /** 工作编号 */
+    @Excel(name = "工作编号")
+    private String jobNo;
 
     /** 登录名称 */
     @Excel(name = "登录名称")
@@ -160,7 +168,23 @@ public class SysUser extends BaseEntity
         this.roleId = roleId;
     }
 
-    @NotBlank(message = "登录账号不能为空")
+    public String getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+
+	public String getJobNo() {
+		return jobNo;
+	}
+
+	public void setJobNo(String jobNo) {
+		this.jobNo = jobNo;
+	}
+
+	@NotBlank(message = "登录账号不能为空")
     @Size(min = 0, max = 30, message = "登录账号长度不能超过30个字符")
     public String getLoginName()
     {

@@ -35,7 +35,7 @@
 			</div>
 			
 			<div class="btn-group-sm" id="toolbar" role="group">
-				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="monitor:job:add">
+				<!-- <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="monitor:job:add">
 	                <i class="fa fa-plus"></i> 新增
 	            </a>
 	            <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="monitor:job:edit">
@@ -46,7 +46,10 @@
 		        </a>
 		         <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="monitor:job:export">
 		            <i class="fa fa-download"></i> 导出
-		        </a>
+		        </a> -->
+		        <a class="btn btn-success" onclick="syncRuleINfo()" shiro:hasPermission="monitor:job:add">
+	                <i class="fa fa-plus"></i> 更新任务
+	            </a>
 		        <a class="btn btn-info" onclick="javascript:jobLog()" shiro:hasPermission="monitor:job:detail">
 		            <i class="fa fa-list"></i> 日志
 		        </a>
@@ -175,6 +178,20 @@
 		        url += '?jobId=' + jobId;
 		    }
 		    $.modal.openTab("调度日志", url);
+		}
+		
+		function syncRuleINfo(){
+			var url=prefix+"/syncRuleINfo";
+			$.modal.loading("数据同步中");
+			$.ajax({
+				type: "post",
+				url: url,
+				data: {},
+				success: function(data) {
+					$.modal.closeLoading();
+					$.table.refresh();//刷新
+				}
+			});
 		}
 	</script>
 </body>

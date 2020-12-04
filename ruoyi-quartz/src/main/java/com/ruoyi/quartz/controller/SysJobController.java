@@ -20,7 +20,9 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.exception.job.TaskException;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.quartz.domain.SysJob;
+import com.ruoyi.quartz.domain.SysQuartzRule;
 import com.ruoyi.quartz.service.ISysJobService;
+import com.ruoyi.quartz.service.ISysQuartzRuleService;
 import com.ruoyi.quartz.util.CronUtils;
 
 /**
@@ -36,6 +38,9 @@ public class SysJobController extends BaseController
 
     @Autowired
     private ISysJobService jobService;
+    
+    @Autowired
+    private ISysQuartzRuleService ruleService;
 
     @RequiresPermissions("monitor:job:view")
     @GetMapping()
@@ -134,6 +139,31 @@ public class SysJobController extends BaseController
             return AjaxResult.error("cron表达式不正确");
         }
         return toAjax(jobService.insertJob(job));
+    }
+    
+    /**
+     * 从规则同步定时任务
+     */
+    @Log(title = "定时任务", businessType = BusinessType.INSERT)
+    @RequiresPermissions("monitor:job:add")
+    @PostMapping("/syncRuleINfo")
+    @ResponseBody
+    public AjaxResult syncRuleINfo() throws SchedulerException, TaskException
+    {
+    	SysQuartzRule item=new SysQuartzRule();
+    	List<SysQuartzRule> rules=ruleService.selectSysQuartzRuleList(item);
+    	if(rules!=null && rules.size()>0) {
+    		for (int i = 0; i < rules.size(); i++) {
+    			SysJob job = new SysJob();
+    			
+			}
+    	}
+        /*if (!CronUtils.isValid(job.getCronExpression()))
+        {
+            return AjaxResult.error("cron表达式不正确");
+        }
+        return toAjax(jobService.insertJob(job));*/
+    	return null;
     }
 
     /**

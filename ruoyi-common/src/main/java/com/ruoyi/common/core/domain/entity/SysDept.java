@@ -19,7 +19,10 @@ public class SysDept extends BaseEntity
 
     /** 父部门ID */
     private Long parentId;
-
+    
+    /** 海康组织ID */
+    private String orgIndexCode;
+    
     /** 祖级列表 */
     private String ancestors;
 
@@ -67,7 +70,15 @@ public class SysDept extends BaseEntity
         this.parentId = parentId;
     }
 
-    public String getAncestors()
+    public String getOrgIndexCode() {
+		return orgIndexCode;
+	}
+
+	public void setOrgIndexCode(String orgIndexCode) {
+		this.orgIndexCode = orgIndexCode;
+	}
+
+	public String getAncestors()
     {
         return ancestors;
     }

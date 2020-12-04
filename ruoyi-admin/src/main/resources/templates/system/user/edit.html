@@ -9,6 +9,7 @@
         <form class="form-horizontal" id="form-user-edit" th:object="${user}">
             <input name="userId"  type="hidden"  th:field="*{userId}" />
 			<input name="deptId"  type="hidden"  th:field="*{deptId}" id="treeId"/>
+			<input name="orgId"  type="hidden"  th:field="*{orgId}" />
             <h4 class="form-header h4">基本信息</h4>
             <div class="row">
             	<div class="col-sm-6">
@@ -94,6 +95,16 @@
                             <select name="sex" class="form-control m-b" th:with="type=${@dict.getType('sys_user_sex')}">
 				                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{sex}"></option>
 				            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+            	<div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label">工号：</label>
+                        <div class="col-xs-8">
+                            <input name="jobNo" placeholder="请输入用户工号" class="form-control" type="text" maxlength="30" th:field="*{jobNo}" >
                         </div>
                     </div>
                 </div>

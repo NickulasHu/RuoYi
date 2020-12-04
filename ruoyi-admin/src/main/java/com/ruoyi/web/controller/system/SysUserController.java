@@ -207,6 +207,11 @@ public class SysUserController extends BaseController
         					 user.setPassword("000000");
         					 if(jsonUser.getString("orgIndexCode")!=null) {
         						 user.setDeptId(IdUtils.getLongFormString(jsonUser.getString("orgIndexCode")));
+        						 user.setOrgId(jsonUser.getString("orgIndexCode"));
+        					 }
+        					 
+        					 if(jsonUser.getString("jobNo")!=null) {
+        						 user.setJobNo(jsonUser.getString("jobNo"));
         					 }
         					 
         					user.setSalt(ShiroUtils.randomSalt());

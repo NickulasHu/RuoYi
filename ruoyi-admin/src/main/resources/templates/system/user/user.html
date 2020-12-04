@@ -44,7 +44,9 @@
 								<li>
 									手机号码：<input type="text" name="phonenumber"/>
 								</li>
-								
+								<li>
+									学号：<input type="text" name="jobNo"/>
+								</li>
 								<li>
 									<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
 								    <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -129,7 +131,8 @@
 		        },
 		        {
 		            field: 'userId',
-		            title: '用户ID'
+		            title: '用户ID',
+		            visible: false
 		        },
 		        {
 		            field: 'userName',
@@ -145,8 +148,8 @@
 		            visible: false
 		        },
 		        {
-		            field: 'phonenumber',
-		            title: '手机'
+		            field: 'jobNo',
+		            title: '学号'
 		        },
 		        {
 		        	visible: editFlag == 'hidden' ? false : true,
