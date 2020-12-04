@@ -134,7 +134,7 @@ public class SysUserController extends BaseController
     public AjaxResult syncUserINfo(String deptId,String deptName)
     {
     	//删除所有用户，除了管理员
-    	DeleteAllUsers();
+    	//DeleteAllUsers();
     	getUserFromHiKvision(deptId,deptName);
     	//如果请求参数出错，需报出异常
     	boolean result=false;
@@ -145,15 +145,20 @@ public class SysUserController extends BaseController
     	}
     }
     
-    /**同步前删除原有人员**/
-    private void DeleteAllUsers() {
+    /**删除所有用户数据**/
+    @RequiresPermissions("system:user:remove")
+    @PostMapping("/removeAll")
+    @ResponseBody
+    public AjaxResult removeAll()
+    {
+    	int result=0;
     	try {
-			@SuppressWarnings("unused")
-			int result=userService.deleteAllUsers();
+			result=userService.deleteAllUsers();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+    	return toAjax(result);
+    }
 
 	@Async
     private String getUserFromHiKvision(String deptId,String deptName) {

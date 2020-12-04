@@ -75,6 +75,9 @@
 			        <a class="btn btn-info" onclick="syncUserINfo()" shiro:hasPermission="system:user:import">
 			            <i class="fa fa-upload"></i> 数据同步
 			        </a>
+			        <a class="btn btn-danger" onclick="removeAll()" shiro:hasPermission="system:user:remove">
+		                <i class="fa fa-remove"></i> 删除所有
+		            </a>
 			        <a class="btn btn-info" onclick="openConfigModel()" shiro:hasPermission="system:user:import">
 			            <i class="fa fa-chain"></i> 配置组织
 			        </a>
@@ -220,6 +223,22 @@
         	var userId =$.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
         	var url=ctx+"system/user/config/"+userId;
         	$.modal.open("配置组织", url);
+        }
+		
+		function removeAll(){
+        	$.modal.confirm("确认要全部删除吗?", function() {
+        		var url=ctx+"system/user/removeAll";
+    			$.modal.loading("数据同步中");
+    			$.ajax({
+    				type: "post",
+    				url: url,
+    				data: {},
+    				success: function(data) {
+    					$.modal.closeLoading();
+    					$.table.refresh();//刷新
+    				}
+    			});
+	    	});
         }
 		
 		$('#btnExpand').click(function() {

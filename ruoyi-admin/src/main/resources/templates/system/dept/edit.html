@@ -8,6 +8,7 @@
 		<form class="form-horizontal m" id="form-dept-edit" th:object="${dept}">
 			<input name="deptId" type="hidden" th:field="*{deptId}" />
 			<input id="treeId" name="parentId" type="hidden" th:field="*{parentId}" />
+			<input name="orgIndexCode" type="hidden" th:field="*{orgIndexCode}" />
 			<div class="form-group">
 				<label class="col-sm-3 control-label">上级部门：</label>
 				<div class="col-sm-8">
