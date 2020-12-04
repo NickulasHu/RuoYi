@@ -184,6 +184,7 @@ public class SysDeptController extends BaseController
     							 continue;
     						 }else {
     							 dept.setDeptId(IdUtils.getLongFormString(jsonDept.getString("orgIndexCode")));
+    							 dept.setOrgIndexCode(jsonDept.getString("orgIndexCode"));
     						 }
     					 }
     					 
