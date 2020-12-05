@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hikvision.artemis.sdk.ArtemisHttpUtil;
 import com.hikvision.artemis.sdk.config.ArtemisConfig;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.config.HikvisionConfig;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
@@ -28,7 +29,6 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.SysBuilding;
 import com.ruoyi.system.service.ISysBuildingService;
-import com.ruoyi.web.core.config.HikvisionConfig;
 
 /**
  * 【请填写功能名称】Controller

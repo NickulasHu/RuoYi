@@ -24,6 +24,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hikvision.artemis.sdk.ArtemisHttpUtil;
 import com.hikvision.artemis.sdk.config.ArtemisConfig;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.config.HikvisionConfig;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -43,7 +44,6 @@ import com.ruoyi.system.service.ISysPostService;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserDeptService;
 import com.ruoyi.system.service.ISysUserService;
-import com.ruoyi.web.core.config.HikvisionConfig;
 
 /**
  * 用户信息

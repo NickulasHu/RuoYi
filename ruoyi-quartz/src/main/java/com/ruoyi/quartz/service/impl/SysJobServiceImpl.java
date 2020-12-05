@@ -253,4 +253,10 @@ public class SysJobServiceImpl implements ISysJobService
     {
         return CronUtils.isValid(cronExpression);
     }
+
+	@Override
+	public SysJob getJobByRuleId(String ruleId) {
+		// TODO Auto-generated method stub
+		return jobMapper.getJobByRuleId(ruleId);
+	}
 }

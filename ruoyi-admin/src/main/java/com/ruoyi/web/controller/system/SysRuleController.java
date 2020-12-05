@@ -1,10 +1,15 @@
 package com.ruoyi.web.controller.system;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -19,15 +24,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.hikvision.artemis.sdk.ArtemisHttpUtil;
 import com.hikvision.artemis.sdk.config.ArtemisConfig;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.config.HikvisionConfig;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.utils.uuid.IdUtils;
+import com.ruoyi.quartz.domain.SysJob;
+import com.ruoyi.quartz.service.ISysJobService;
 import com.ruoyi.system.domain.SysBuilding;
 import com.ruoyi.system.domain.SysRule;
 import com.ruoyi.system.domain.SysRuleBuilding;
@@ -37,7 +46,6 @@ import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysRuleBuildingService;
 import com.ruoyi.system.service.ISysRuleDeptService;
 import com.ruoyi.system.service.ISysRuleService;
-import com.ruoyi.web.core.config.HikvisionConfig;
 
 /**
  * 【请填写功能名称】Controller
@@ -68,6 +76,9 @@ public class SysRuleController extends BaseController
     
     @Autowired
     private ISysRuleDeptService ruleDeptService;
+    
+    @Autowired
+    private ISysJobService jobService;
 
     @RequiresPermissions("system:rule:view")
     @GetMapping()
@@ -311,8 +322,10 @@ public class SysRuleController extends BaseController
 					 SysRule oldRule=sysRuleService.selectSysRuleById(rule.getRuleId());
 					 if(oldRule!=null) {
 						 sysRuleService.updateSysRule(oldRule);
+						 generateJob(oldRule);
 					 }else {
 						 sysRuleService.insertSysRule(rule);
+						 generateJob(rule);
 					 }
 				}
 			 }
@@ -322,4 +335,70 @@ public class SysRuleController extends BaseController
     	 }
     	return mesg;
 	}
+
+	private void generateJob(SysRule rule) {
+		SysJob job = new SysJob();
+		if(rule!=null) {
+			job.setJobName(rule.getRuleName()+"任务");
+			job.setJobGroup("DEFAULT");
+			job.setInvokeTarget("syncTaskAndSendMesg('"+rule.getRuleId()+"')");
+			job.setCronExpression(getCron(rule.getLaterTime()));
+			job.setMisfirePolicy("3");//以前的不执行
+			job.setConcurrent("1");//不并发，0是允许
+			job.setStatus("1");//状态正常
+			job.setRemark(rule.getRuleId());
+			
+			SysJob origJob=jobService.getJobByRuleId(rule.getRuleId());
+			if(origJob!=null) {
+				job.setJobId(origJob.getJobId());
+				try {
+					jobService.updateJob(job);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else {
+				job.setJobId(Long.parseLong(IdUtils.randomUUID()));
+				try {
+					jobService.insertJob(job);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	/*** 
+     *  
+     * @param date 
+     * @param dateFormat : e.g:yyyy-MM-dd HH:mm:ss 
+     * @return 
+     */  
+    public static String formatDateByPattern(Date date,String dateFormat){  
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);  
+        String formatTimeStr = null;  
+        if (date != null) {  
+            formatTimeStr = sdf.format(date);  
+        }  
+        return formatTimeStr;  
+    }  
+/*** 
+     * convert Date to cron ,eg.  "0 07 10 15 1 ? 2016" 
+     * @param date  : 时间点 
+     * @return 
+     */  
+    public static String getCron(String datestr){  
+        String dateFormat="ss mm HH ? ? ?"; 
+        
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);  
+        Date date=DateUtils.getNowDate();
+        String timeOfNow = sdf.format(date);  
+        timeOfNow=timeOfNow.substring(0,9);
+        String ruleTimestr=timeOfNow + datestr;
+        try {
+			date = sdf.parse(ruleTimestr);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+        return formatDateByPattern(date, dateFormat);  
+    }
 }

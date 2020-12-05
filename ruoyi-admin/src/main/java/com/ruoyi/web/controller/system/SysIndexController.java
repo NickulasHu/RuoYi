@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hikvision.artemis.sdk.ArtemisHttpUtil;
 import com.hikvision.artemis.sdk.config.ArtemisConfig;
 import com.ruoyi.common.config.Global;
+import com.ruoyi.common.config.HikvisionConfig;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.entity.SysMenu;
 import com.ruoyi.common.core.domain.entity.SysUser;
@@ -32,7 +33,6 @@ import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysMenuService;
-import com.ruoyi.web.core.config.HikvisionConfig;
 
 /**
  * 首页 业务处理
@@ -114,7 +114,7 @@ public class SysIndexController extends BaseController
     @ResponseBody
     public String localRefresh(String fragment,String taskName,ModelMap mmap)
     {
-    	String result=testHiKvision();
+    	//String result=testHiKvision();
     	JSONArray list = new JSONArray();
      	JSONObject item = new JSONObject();
      	//item.put("name", result);
@@ -125,7 +125,8 @@ public class SysIndexController extends BaseController
      	mmap.put("min",2);
      	mmap.put("max",10);
      	//return "/demo/form/localrefresh";
-     	return result;
+     	System.err.println(hikvisionConfig.host);
+     	return "";
     }
     
     private String testHiKvision() {

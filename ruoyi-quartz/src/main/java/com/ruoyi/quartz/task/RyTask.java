@@ -25,4 +25,8 @@ public class RyTask
     {
         System.out.println("执行无参方法");
     }
+    
+    public void syncTaskAndSendMesg() {
+    	
+    }
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONObject;
 import com.hikvision.artemis.sdk.ArtemisHttpUtil;
 import com.hikvision.artemis.sdk.config.ArtemisConfig;
-import com.ruoyi.web.core.config.HikvisionConfig;
+import com.ruoyi.common.config.HikvisionConfig;
 
 @Component
 public class SubScriptInit implements CommandLineRunner {

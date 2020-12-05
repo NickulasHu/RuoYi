@@ -99,4 +99,7 @@ public interface ISysJobService
      * @return 结果
      */
     public boolean checkCronExpressionIsValid(String cronExpression);
+
+    //根据规则ID查询定时任务
+	public SysJob getJobByRuleId(String ruleId);
 }
