@@ -390,15 +390,15 @@ public class SysRuleController extends BaseController
         String dateFormat="ss mm HH ? ? ?"; 
         
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);  
-        Date date=DateUtils.getNowDate();
-        String timeOfNow = sdf.format(date);  
-        timeOfNow=timeOfNow.substring(0,9);
-        String ruleTimestr=timeOfNow + datestr;
+        SimpleDateFormat getDate = new SimpleDateFormat("yyyy-MM-dd");
+        String timeOfNow = getDate.format(DateUtils.getNowDate());
+        String ruleTimestr=timeOfNow + " "+datestr;
+        Date ruleDate=new Date();
         try {
-			date = sdf.parse(ruleTimestr);
+        	ruleDate = sdf.parse(ruleTimestr);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-        return formatDateByPattern(date, dateFormat);  
+        return formatDateByPattern(ruleDate, dateFormat);  
     }
 }
