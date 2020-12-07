@@ -385,7 +385,7 @@ public class SysRuleController extends BaseController
      * @return 
      */  
     public static String getCron(String datestr){  
-        String dateFormat="ss mm HH ? ? ?"; 
+        String dateFormat="ss mm HH * * ? *"; 
          
         SimpleDateFormat getDate = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat getExactTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
