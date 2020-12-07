@@ -355,7 +355,7 @@ public class SysRuleController extends BaseController
 					e.printStackTrace();
 				}
 			}else {
-				job.setJobId(Long.parseLong(IdUtils.randomUUID()));
+				job.setJobId(IdUtils.getLongFormString(IdUtils.randomUUID()));
 				try {
 					jobService.insertJob(job);
 				} catch (Exception e) {
