@@ -7,9 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -388,14 +386,14 @@ public class SysRuleController extends BaseController
      */  
     public static String getCron(String datestr){  
         String dateFormat="ss mm HH ? ? ?"; 
-        
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);  
+         
         SimpleDateFormat getDate = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat getExactTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String timeOfNow = getDate.format(DateUtils.getNowDate());
         String ruleTimestr=timeOfNow + " "+datestr;
         Date ruleDate=new Date();
         try {
-        	ruleDate = sdf.parse(ruleTimestr);
+        	ruleDate = getExactTime.parse(ruleTimestr);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
