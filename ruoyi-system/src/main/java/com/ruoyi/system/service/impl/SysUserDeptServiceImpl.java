@@ -101,4 +101,9 @@ public class SysUserDeptServiceImpl implements ISysUserDeptService
 	public int deleteConfigDepts(Long userId) {
 		return sysUserDeptMapper.deleteConfigDepts(userId);
 	}
+
+	@Override
+	public List<Long> selectUserIdByDeptId(Long deptId) {
+		return sysUserDeptMapper.selectUserIdByDeptId(deptId);
+	}
 }

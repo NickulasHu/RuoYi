@@ -123,4 +123,6 @@ public interface SysUserMapper
     public SysUser checkEmailUnique(String email);
 
 	public List<SysUser> selectAllUsers();
+
+	public SysUser selectUserByJobNo(String studentCode);
 }

@@ -62,4 +62,6 @@ public interface SysUserDeptMapper
 	public List<Long> selectConfigDeptIds(Long userId);
 
 	public int deleteConfigDepts(Long userId);
+
+	public List<Long> selectUserIdByDeptId(Long deptId);
 }

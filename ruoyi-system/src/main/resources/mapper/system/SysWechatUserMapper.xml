@@ -34,6 +34,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSysWechatUserVo"/>
         where openId = #{openId}
     </select>
+    
+    <select id="selectSysWechatUserByUserId" parameterType="java.lang.Long" resultType="String">
+        select openId from sys_wechat_user
+        where userId = #{userId}
+    </select>
         
     <insert id="insertSysWechatUser" parameterType="SysWechatUser">
         insert into sys_wechat_user

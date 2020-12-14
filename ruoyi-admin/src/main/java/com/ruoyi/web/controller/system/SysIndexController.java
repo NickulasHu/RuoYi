@@ -1,9 +1,8 @@
 package com.ruoyi.web.controller.system;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -17,10 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hikvision.artemis.sdk.ArtemisHttpUtil;
-import com.hikvision.artemis.sdk.config.ArtemisConfig;
 import com.ruoyi.common.config.Global;
-import com.ruoyi.common.config.HikvisionConfig;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.entity.SysMenu;
 import com.ruoyi.common.core.domain.entity.SysUser;
@@ -31,8 +27,15 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.ShiroUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.wechat.WxMpServiceInstance;
+import com.ruoyi.system.domain.SysInOutRecord;
+import com.ruoyi.system.domain.SysRule;
 import com.ruoyi.system.service.ISysConfigService;
+import com.ruoyi.system.service.ISysInOutRecordService;
 import com.ruoyi.system.service.ISysMenuService;
+import com.ruoyi.system.service.ISysRuleService;
+
+import me.chanjar.weixin.mp.api.WxMpService;
 
 /**
  * 首页 业务处理
@@ -49,7 +52,10 @@ public class SysIndexController extends BaseController
     private ISysConfigService configService;
     
     @Autowired
-    private HikvisionConfig hikvisionConfig;
+	private ISysRuleService ruleService;
+    
+    @Autowired
+	private ISysInOutRecordService inOutRecordService;
     
     // 系统首页
     @GetMapping("/index")
@@ -114,7 +120,7 @@ public class SysIndexController extends BaseController
     @ResponseBody
     public String localRefresh(String fragment,String taskName,ModelMap mmap)
     {
-    	//String result=testHiKvision();
+    	String result=getRecord();
     	JSONArray list = new JSONArray();
      	JSONObject item = new JSONObject();
      	//item.put("name", result);
@@ -125,37 +131,13 @@ public class SysIndexController extends BaseController
      	mmap.put("min",2);
      	mmap.put("max",10);
      	//return "/demo/form/localrefresh";
-     	System.err.println(hikvisionConfig.host);
-     	return "";
+     	return result;
     }
     
-    private String testHiKvision() {
-    	ArtemisConfig.host=hikvisionConfig.host;
-    	ArtemisConfig.appKey=hikvisionConfig.appKey;
-    	ArtemisConfig.appSecret=hikvisionConfig.appSecret;
-    	
-    	final String getSecurityApi = "/artemis" + "/api/openApi/v1/pageSizeStatus"; // 接口路径
-    	 @SuppressWarnings("serial")
-		Map<String, String> path = new HashMap<String, String>(2) {
-    	 {
-    		 put("https://", getSecurityApi);
-    	 }
-    	 };
-    	 
-    	 JSONObject jsonBody = new JSONObject();
-    	 jsonBody.put("beginTime","2020-11-01 03:00:21");
-    	 jsonBody.put("endTime","2020-11-06 12:00:21");
-    	 jsonBody.put("pageNo",1);
-    	 jsonBody.put("pageSize",30);
-    	 jsonBody.put("personName","");
-    	 jsonBody.put("personNum","12");
-    	 jsonBody.put("personType",1);
-    	 jsonBody.put("sizeStatus",1);
-    	 String body = jsonBody.toJSONString();
-
-    	 String result = ArtemisHttpUtil.doPostStringArtemis(path, body, null,null,"application/json");
-    	 //JSONObject jsonData = JSONObject.parseObject(result);
-    	 return result;
+    private String getRecord() {
+    	WxMpService wxMpService = WxMpServiceInstance.getInstance().getWxMpService();
+		
+		return "";
     }
 
     // 检查初始密码是否提醒修改

@@ -60,4 +60,6 @@ public interface SysWechatUserMapper
     public int deleteSysWechatUserByIds(String[] openIds);
 
 	public int deleteAllSysWechatUserByIds();
+
+	public String selectSysWechatUserByUserId(Long userId);
 }

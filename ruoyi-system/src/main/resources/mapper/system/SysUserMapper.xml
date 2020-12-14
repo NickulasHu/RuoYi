@@ -70,6 +70,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="jobNo != null and jobNo != ''">
 			AND u.jobNo  = #{jobNo}
 		</if>
+		<if test="orgId != null and orgId != ''">
+			AND u.orgId  = #{orgId}
+		</if>
 		<if test="status != null and status != ''">
 			AND u.status = #{status}
 		</if>
@@ -124,6 +127,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.dataScope}
 	</select>
 	
+	<select id="selectUserByJobNo" parameterType="String" resultMap="SysUserResult">
+	    <include refid="selectUserVo"/>
+		where u.jobNo = #{studentCode}
+	</select>
+	
 	<select id="selectUserByLoginName" parameterType="String" resultMap="SysUserResult">
 	    <include refid="selectUserVo"/>
 		where u.login_name = #{userName}
@@ -157,7 +165,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<delete id="deleteUserById" parameterType="Long">
- 		update sys_user set del_flag = '2' where user_id = #{userId}
+ 		delete from sys_user where user_id = #{userId}
  	</delete>
  	
  	<delete id="deleteUserByIds" parameterType="Long">

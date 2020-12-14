@@ -206,4 +206,7 @@ public interface ISysUserService
     public int changeStatus(SysUser user);
 
 	public int deleteAllUsers();
+
+	//根据学号查找用户
+	public SysUser selectUserByJobNo(String studentCode);
 }

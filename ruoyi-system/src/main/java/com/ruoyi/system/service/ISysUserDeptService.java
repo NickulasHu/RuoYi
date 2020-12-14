@@ -62,4 +62,11 @@ public interface ISysUserDeptService
 	public List<Long> selectConfigDeptIds(Long userId);
 
 	public int deleteConfigDepts(Long userId);
+
+	/**
+     * 根据部门Id查用户Id
+     * @param deptId 部门ID
+     * @return 用户Id
+     */
+	public List<Long> selectUserIdByDeptId(Long deptId);
 }

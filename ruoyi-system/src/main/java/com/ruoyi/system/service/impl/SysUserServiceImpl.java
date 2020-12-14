@@ -541,4 +541,9 @@ public class SysUserServiceImpl implements ISysUserService
 		 }
 	     return deleteUserByIds(userIds);
 	}
+
+	@Override
+	public SysUser selectUserByJobNo(String studentCode) {
+		return userMapper.selectUserByJobNo(studentCode);
+	}
 }

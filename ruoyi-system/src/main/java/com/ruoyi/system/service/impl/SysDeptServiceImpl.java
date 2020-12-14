@@ -1,12 +1,15 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.Ztree;
@@ -312,5 +315,27 @@ public class SysDeptServiceImpl implements ISysDeptService
 	@Override
 	public List<SysDept> selectChildrenDeptById(Long parentId) {
 	    return deptMapper.selectChildrenDeptById(parentId);
+	}
+
+	@Override
+	public List<SysDept> selectChildDeptList(SysDept dept) {
+		List<SysDept> allDept = deptMapper.selectDeptList(dept);
+		HashMap<Long, SysDept> deptMap=new HashMap<Long, SysDept>();
+		
+		if(allDept==null || allDept.size()==0) return allDept;
+		for (int i = 0; i < allDept.size(); i++) {
+			SysDept item=allDept.get(i);
+			deptMap.put(item.getDeptId(), item);
+		}
+		
+    	for (int i = 0; i < allDept.size(); i++) {
+			//循环添加父级ID
+    		if(allDept.get(i).getParentId()!=null) {
+    			Long parentId=allDept.get(i).getParentId();
+    			deptMap.remove(parentId);
+    		}
+		}
+    	
+		return (List<SysDept>) deptMap.values();
 	}
 }

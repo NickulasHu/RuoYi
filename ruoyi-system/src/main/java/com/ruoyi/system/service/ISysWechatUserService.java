@@ -60,4 +60,6 @@ public interface ISysWechatUserService
     public int deleteSysWechatUserById(String openId);
 
 	public int deleteAllSysWechatUserByIds();
+
+	public String selectSysWechatUserByUserId(Long userId);
 }

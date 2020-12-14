@@ -20,6 +20,9 @@ public interface ISysDeptService
      */
     public List<SysDept> selectDeptList(SysDept dept);
     
+    /**查询叶节点**/
+    public List<SysDept> selectChildDeptList(SysDept dept);
+    
     /**
      * 根据父级Id查询子部门
      */
