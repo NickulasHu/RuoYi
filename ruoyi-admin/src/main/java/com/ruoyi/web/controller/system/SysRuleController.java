@@ -339,7 +339,7 @@ public class SysRuleController extends BaseController
 		if(rule!=null) {
 			job.setJobName(rule.getRuleName()+"任务");
 			job.setJobGroup("DEFAULT");
-			job.setInvokeTarget("syncTaskAndSendMesg('"+rule.getRuleId()+"')");
+			job.setInvokeTarget("ryTask.syncTaskAndSendMesg('"+rule.getRuleId()+"')");
 			job.setCronExpression(getCron(rule.getLaterTime()));
 			job.setMisfirePolicy("3");//以前的不执行
 			job.setConcurrent("1");//不并发，0是允许
