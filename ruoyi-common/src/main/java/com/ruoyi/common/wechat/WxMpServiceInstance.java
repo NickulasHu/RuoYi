@@ -1,9 +1,4 @@
-package com.ruoyi.web.controller.wechat;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-import com.ruoyi.web.core.config.WechatConfig;
-
+package com.ruoyi.common.wechat;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
@@ -11,9 +6,6 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 
 public class WxMpServiceInstance {
-	@Autowired
-	private WechatConfig wechatConfig;
-	
 	private WxMpService wxMpService;
 	private WxMpConfigStorage wxMpConfigStorage;
 	private WxMpMessageRouter wxMpMessageRouter;
@@ -52,9 +44,7 @@ public class WxMpServiceInstance {
 	
 	public WxMpConfigStorage wxMpConfigStorage() {
 		WxMpInMemoryConfigStorage wxMpInMemoryConfigStorage = new WxMpInMemoryConfigStorage();
-		/*String appId=wechatConfig.appId;
-    	System.err.println(appId);*/
-    	
+		
 	    wxMpInMemoryConfigStorage.setAppId("wxb46e5c71a795750a");
 	    wxMpInMemoryConfigStorage.setSecret("a0adad96625ff3db6e56491d48c98aed");
 	   /* wxMpInMemoryConfigStorage.setToken(wechatConfig.token);

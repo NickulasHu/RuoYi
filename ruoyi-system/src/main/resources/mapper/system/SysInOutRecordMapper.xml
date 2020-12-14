@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysInOutRecordMapper">
+    
+    <resultMap type="SysInOutRecord" id="SysInOutRecordResult">
+        <result property="recordId"    column="recordId"    />
+        <result property="studentCode"    column="studentCode"    />
+        <result property="entryType"    column="entryType"    />
+        <result property="studentName"    column="studentName"    />
+        <result property="sex"    column="sex"    />
+        <result property="orgId"    column="orgId"    />
+        <result property="dormId"    column="dormId"    />
+        <result property="alarmTime"    column="alarmTime"    />
+        <result property="startTime"    column="startTime"    />
+        <result property="endTime"    column="endTime"    />
+    </resultMap>
+
+    <sql id="selectSysInOutRecordVo">
+        select recordId, studentCode, entryType, studentName, sex, orgId, dormId, alarmTime from sys_in_out_record
+    </sql>
+
+    <select id="selectSysInOutRecordList" parameterType="SysInOutRecord" resultMap="SysInOutRecordResult">
+        <include refid="selectSysInOutRecordVo"/>
+        <where>  
+            <if test="studentCode != null  and studentCode != ''"> and studentCode = #{studentCode}</if>
+            <if test="entryType != null  and entryType != ''"> and entryType = #{entryType}</if>
+            <if test="studentName != null  and studentName != ''"> and studentName like concat('%', #{studentName}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="orgId != null  and orgId != ''"> and orgId = #{orgId}</if>
+            <if test="dormId != null  and dormId != ''"> and dormId = #{dormId}</if>
+            <if test="alarmTime != null  and alarmTime != ''"> and alarmTime = #{alarmTime}</if>
+            <if test="startTime != null  and startTime != '' and endTime != null  and endTime != ''"> 
+            	and alarmTime BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectLastRecordByCode" parameterType="SysInOutRecord" resultMap="SysInOutRecordResult">
+        <include refid="selectSysInOutRecordVo"/>
+        <where>  
+            <if test="studentCode != null  and studentCode != ''"> and studentCode = #{studentCode}</if>
+            <if test="entryType != null  and entryType != ''"> and entryType = #{entryType}</if>
+            <if test="studentName != null  and studentName != ''"> and studentName like concat('%', #{studentName}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="orgId != null  and orgId != ''"> and orgId = #{orgId}</if>
+            <if test="dormId != null  and dormId != ''"> and dormId = #{dormId}</if>
+            <if test="alarmTime != null  and alarmTime != ''"> and alarmTime = #{alarmTime}</if>
+            <if test="startTime != null  and startTime != '' and endTime != null  and endTime != ''"> 
+            	and alarmTime BETWEEN #{startTime} AND #{endTime}
+            </if>
+            ORDER BY alarmTime desc LIMIT 1
+        </where>
+    </select>
+    
+    <select id="selectSysInOutRecordById" parameterType="String" resultMap="SysInOutRecordResult">
+        <include refid="selectSysInOutRecordVo"/>
+        where recordId = #{recordId}
+    </select>
+        
+    <insert id="insertSysInOutRecord" parameterType="SysInOutRecord">
+        insert into sys_in_out_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">recordId,</if>
+            <if test="studentCode != null">studentCode,</if>
+            <if test="entryType != null">entryType,</if>
+            <if test="studentName != null">studentName,</if>
+            <if test="sex != null">sex,</if>
+            <if test="orgId != null">orgId,</if>
+            <if test="dormId != null">dormId,</if>
+            <if test="alarmTime != null">alarmTime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">#{recordId},</if>
+            <if test="studentCode != null">#{studentCode},</if>
+            <if test="entryType != null">#{entryType},</if>
+            <if test="studentName != null">#{studentName},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="orgId != null">#{orgId},</if>
+            <if test="dormId != null">#{dormId},</if>
+            <if test="alarmTime != null">#{alarmTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysInOutRecord" parameterType="SysInOutRecord">
+        update sys_in_out_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentCode != null">studentCode = #{studentCode},</if>
+            <if test="entryType != null">entryType = #{entryType},</if>
+            <if test="studentName != null">studentName = #{studentName},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="orgId != null">orgId = #{orgId},</if>
+            <if test="dormId != null">dormId = #{dormId},</if>
+            <if test="alarmTime != null">alarmTime = #{alarmTime},</if>
+        </trim>
+        where recordId = #{recordId}
+    </update>
+
+    <delete id="deleteSysInOutRecordById" parameterType="String">
+        delete from sys_in_out_record where recordId = #{recordId}
+    </delete>
+
+    <delete id="deleteSysInOutRecordByIds" parameterType="String">
+        delete from sys_in_out_record where recordId in 
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+
+</mapper>
