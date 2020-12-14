@@ -336,6 +336,6 @@ public class SysDeptServiceImpl implements ISysDeptService
     		}
 		}
     	
-		return (List<SysDept>) deptMap.values();
+		return new ArrayList<SysDept>(deptMap.values());
 	}
 }

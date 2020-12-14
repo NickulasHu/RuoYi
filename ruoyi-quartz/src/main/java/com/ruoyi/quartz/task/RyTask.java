@@ -254,7 +254,7 @@ public class RyTask
 		}
 		
 		if(classMateMap.values().size()>0) {
-			classMatesHasNoRecord=(List<SysUser>) classMateMap.values();
+			classMatesHasNoRecord=new ArrayList<SysUser>(classMateMap.values());
 		}
 		
 		return classMatesHasNoRecord;
