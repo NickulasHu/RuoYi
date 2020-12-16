@@ -546,4 +546,9 @@ public class SysUserServiceImpl implements ISysUserService
 	public SysUser selectUserByJobNo(String studentCode) {
 		return userMapper.selectUserByJobNo(studentCode);
 	}
+
+	@Override
+	public List<SysUser> selectClassMates(Long deptId) {
+		return userMapper.selectClassMates(deptId);
+	}
 }

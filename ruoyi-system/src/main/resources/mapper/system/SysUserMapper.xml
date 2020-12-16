@@ -127,6 +127,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.dataScope}
 	</select>
 	
+	<select id="selectClassMates" parameterType="Long" resultMap="SysUserResult">
+	    <include refid="selectUserVo"/>
+		where u.dept_id = #{deptId}
+	</select>
+	
 	<select id="selectUserByJobNo" parameterType="String" resultMap="SysUserResult">
 	    <include refid="selectUserVo"/>
 		where u.jobNo = #{studentCode}

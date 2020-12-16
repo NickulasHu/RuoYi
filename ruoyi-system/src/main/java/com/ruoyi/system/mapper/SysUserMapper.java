@@ -125,4 +125,6 @@ public interface SysUserMapper
 	public List<SysUser> selectAllUsers();
 
 	public SysUser selectUserByJobNo(String studentCode);
+
+	public List<SysUser> selectClassMates(Long deptId);
 }

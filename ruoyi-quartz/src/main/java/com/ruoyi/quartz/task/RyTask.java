@@ -31,7 +31,6 @@ import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.service.ISysWechatUserService;
 
 import me.chanjar.weixin.common.exception.WxErrorException;
-import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
@@ -117,9 +116,7 @@ public class RyTask
     	if(allClass!=null && allClass.size()>0) {
     		for (int i = 0; i < allClass.size(); i++) {
 				//获取班级中所有同学
-    			SysUser deptUser=new SysUser();
-    			deptUser.setDeptId(allClass.get(i).getDeptId());
-    			List<SysUser> calssMates=userService.selectUserList(deptUser);
+    			List<SysUser> calssMates=userService.selectClassMates(allClass.get(i).getDeptId());
     			if(calssMates!=null && calssMates.size()>0) {
     				for (int j = 0; j < calssMates.size(); j++) {
     					 JSONObject jsonBody = new JSONObject();

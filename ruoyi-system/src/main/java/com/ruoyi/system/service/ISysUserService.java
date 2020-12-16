@@ -209,4 +209,7 @@ public interface ISysUserService
 
 	//根据学号查找用户
 	public SysUser selectUserByJobNo(String studentCode);
+
+	//查询部门下的所有人员
+	public List<SysUser> selectClassMates(Long deptId);
 }
