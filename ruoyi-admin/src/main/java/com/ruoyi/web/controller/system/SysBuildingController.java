@@ -101,6 +101,7 @@ public class SysBuildingController extends BaseController
     	 jsonBody.put("pageSize",1000);
     	 String body = jsonBody.toJSONString();
     	 String result = ArtemisHttpUtil.doPostStringArtemis(path, body, null,null,"application/json");
+    	 if(result==null) return "";
     	 JSONObject jsonData = JSONObject.parseObject(result);
     	 
     	 if("0".equals(jsonData.getString("code"))&&jsonData.getString("data")!=null) {

@@ -284,6 +284,7 @@ public class SysRuleController extends BaseController
     	 JSONObject jsonBody = new JSONObject();
     	 String body = jsonBody.toJSONString();
     	 String result = ArtemisHttpUtil.doPostStringArtemis(path, body, null,null,"application/json");
+    	 if(result==null) return "";
     	 JSONObject jsonData = JSONObject.parseObject(result);
     	 if("0".equals(jsonData.getString("code"))&&jsonData.getString("data")!=null) {
     		 JSONArray ruleList=JSONArray.parseArray(jsonData.getString("data"));

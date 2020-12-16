@@ -130,6 +130,7 @@ public class RyTask
     			    	 
     			    	 String body = jsonBody.toJSONString();
     			    	 String result = ArtemisHttpUtil.doPostStringArtemis(path, body, null,null,"application/json");
+    			    	 if(result==null) return;
     			    	 JSONObject jsonData = JSONObject.parseObject(result);
     			    	 if("0".equals(jsonData.getString("code"))&&jsonData.getString("data")!=null) {
     			    		 jsonData=JSONObject.parseObject(jsonData.getString("data"));
