@@ -111,6 +111,8 @@ public class RyTask
 	   	 };
     	
     	//同步所有班级学生进出记录
+	   	 //同步前删除以前的记录
+	   	inOutRecordService.deleteAllRecord();
     	//获取所有班级
     	List<SysDept> allClass = deptService.selectChildDeptList(new SysDept());
     	if(allClass!=null && allClass.size()>0) {
@@ -233,9 +235,7 @@ public class RyTask
 		searchRecord.setEndTime(endDate);
 		
 		List<SysInOutRecord> thisDeptUserRecord=inOutRecordService.selectSysInOutRecordList(searchRecord);
-		SysUser searchUser = new SysUser();
-		searchUser.setOrgId(sysDept.getOrgIndexCode());
-		List<SysUser> classMates=userService.selectUserList(searchUser);
+		List<SysUser> classMates=userService.selectClassMates(sysDept.getDeptId());
 		HashMap<String, SysUser> classMateMap=new HashMap<String, SysUser>();
 		
 		if(classMates==null || classMates.size()==0) return null;

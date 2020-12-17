@@ -60,4 +60,6 @@ public interface SysInOutRecordMapper
     public int deleteSysInOutRecordByIds(String[] recordIds);
 
 	public SysInOutRecord selectLastRecordByCode(SysInOutRecord searchRecord);
+
+	public int deleteAllRecord();
 }

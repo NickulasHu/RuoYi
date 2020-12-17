@@ -61,4 +61,7 @@ public interface ISysInOutRecordService
 
     //根据学号查询当天最后一条记录
 	public SysInOutRecord selectLastRecordByCode(SysInOutRecord searchRecord);
+
+	//删除所有记录
+	public int deleteAllRecord();
 }

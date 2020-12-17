@@ -97,4 +97,9 @@ public class SysInOutRecordServiceImpl implements ISysInOutRecordService
 		// TODO Auto-generated method stub
 		return sysInOutRecordMapper.selectLastRecordByCode(searchRecord);
 	}
+
+	@Override
+	public int deleteAllRecord() {
+		return sysInOutRecordMapper.deleteAllRecord();
+	}
 }

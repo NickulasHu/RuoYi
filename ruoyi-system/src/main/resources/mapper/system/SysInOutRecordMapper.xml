@@ -100,6 +100,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteSysInOutRecordById" parameterType="String">
         delete from sys_in_out_record where recordId = #{recordId}
     </delete>
+    
+    <delete id="deleteAllRecord" >
+        delete from sys_in_out_record
+    </delete>
 
     <delete id="deleteSysInOutRecordByIds" parameterType="String">
         delete from sys_in_out_record where recordId in 
