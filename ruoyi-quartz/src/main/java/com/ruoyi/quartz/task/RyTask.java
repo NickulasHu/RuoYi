@@ -206,6 +206,7 @@ public class RyTask
 			if(useIds==null ||useIds.size()==0)continue;
 			for (int j = 0; j < useIds.size(); j++) {
 				String openId=wechatUserService.selectSysWechatUserByUserId(useIds.get(j));
+				if(openId==null)continue;
 				SysWechatUser wechatUser=wechatUserService.selectSysWechatUserById(openId);
 			
 				WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
