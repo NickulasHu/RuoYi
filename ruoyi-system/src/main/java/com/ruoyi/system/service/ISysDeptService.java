@@ -115,4 +115,7 @@ public interface ISysDeptService
      * @return 结果
      */
     public String checkDeptNameUnique(SysDept dept);
+
+    //根据部门名称模糊查找
+	public Long selectDeptByName(String string);
 }

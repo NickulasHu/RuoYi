@@ -111,7 +111,7 @@ public class RyTask
 	   	 };
     	
     	//同步所有班级学生进出记录
-	   	 //同步前删除以前的记录
+	   	//同步前删除以前的记录
 	   	inOutRecordService.deleteAllRecord();
     	//获取所有班级
     	List<SysDept> allClass = deptService.selectChildDeptList(new SysDept());
@@ -196,7 +196,9 @@ public class RyTask
 			StringBuffer studentInfo=new StringBuffer();
 			for (int j = 0; j < unnormalUser.size(); j++) {
 				studentInfo.append(unnormalUser.get(j).getUserName());
-				studentInfo.append("、");
+				if(j != unnormalUser.size()-1) {
+					studentInfo.append("、");
+				}
 			}
 			studentInfo.append("归寝异常");
 			//调用方法发送
@@ -212,7 +214,6 @@ public class RyTask
 				WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
 												      .toUser(openId)
 												      .templateId(messagetempId)
-												      .url(" ")
 												      .build();
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("first", "尊敬的"+wechatUser.getUserName()+"老师,您的学生："+studentInfo.toString()));
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword1", "湖北省宜昌市凝德总部"));
@@ -221,7 +222,7 @@ public class RyTask
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword4", "15213038372"));
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("remark", "感谢您的使用"));
 			    try {
-					String msgId = wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+					wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
 				} catch (WxErrorException e) {
 					e.printStackTrace();
 				}

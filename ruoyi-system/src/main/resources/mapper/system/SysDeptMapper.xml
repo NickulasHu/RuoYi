@@ -68,6 +68,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    <include refid="selectDeptVo"/>
 		where dept_name=#{deptName} and parent_id = #{parentId} limit 1
 	</select>
+	
+	<select id="selectDeptByName" resultMap="SysDeptResult">
+	    select dept_id where 
+	    dept_name like concat('%', #{deptName}, '%')
+	</select>
 
 	<select id="selectDeptById" parameterType="Long" resultMap="SysDeptResult">
 		select d.dept_id, d.parent_id, d.orgIndexCode, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status,

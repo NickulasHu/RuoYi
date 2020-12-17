@@ -338,4 +338,10 @@ public class SysDeptServiceImpl implements ISysDeptService
     	
 		return new ArrayList<SysDept>(deptMap.values());
 	}
+
+	@Override
+	public Long selectDeptByName(String deptName) {
+		// TODO Auto-generated method stub
+		return deptMapper.selectDeptByName(deptName);
+	}
 }
