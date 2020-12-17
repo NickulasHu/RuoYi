@@ -38,7 +38,10 @@
 		        <a class="btn btn-info" onclick="openConfigModel()" shiro:hasPermission="system:wechatUser:edit">
 		            <i class="fa fa-chain"></i> 配置人员关系
 		        </a>
-		        <a class="btn btn-danger" onclick="removeAll()" shiro:hasPermission="system:user:remove">
+		        <a class="btn btn-danger" onclick="relieveRelation()" shiro:hasPermission="system:user:remove">
+	                <i class="fa fa-remove"></i> 解绑关系
+	            </a>
+	            <a class="btn btn-danger" onclick="removeAll()" shiro:hasPermission="system:user:remove">
 	                <i class="fa fa-remove"></i> 删除全部
 	            </a>
             </div>
@@ -136,6 +139,26 @@
     				data: {},
     				success: function(data) {
     					$.modal.closeLoading();
+    					$.table.refresh();//刷新
+    				}
+    			});
+	    	});
+        }
+        
+        function relieveRelation(){
+        	var wechatUserId =$.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+        	if ($.common.isEmpty(wechatUserId)) {
+    	        $.modal.alertWarning("请至少选择一条记录");
+    	        return;
+    	    }
+        	
+        	$.modal.confirm("确认要解除关系吗?", function() {
+        		var url=ctx+"system/wechatUser/relieveRelation?wechatUserId="+wechatUserId;
+    			$.ajax({
+    				type: "post",
+    				url: url,
+    				data: {},
+    				success: function(data) {
     					$.table.refresh();//刷新
     				}
     			});

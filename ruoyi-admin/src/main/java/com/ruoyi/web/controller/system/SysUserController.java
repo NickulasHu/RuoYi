@@ -154,6 +154,8 @@ public class SysUserController extends BaseController
     	int result=0;
     	try {
 			result=userService.deleteAllUsers();
+			//相关配置也删掉
+			sysUserDeptService.deleteAll();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

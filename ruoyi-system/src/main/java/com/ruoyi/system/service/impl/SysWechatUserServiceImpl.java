@@ -101,4 +101,11 @@ public class SysWechatUserServiceImpl implements ISysWechatUserService
 	public String selectSysWechatUserByUserId(Long userId) {
 		return sysWechatUserMapper.selectSysWechatUserByUserId(userId);
 	}
+
+	@Override
+	public int relieveRelationByIds(String wechatUserId) {
+		// TODO Auto-generated method stub
+		return sysWechatUserMapper.relieveRelationByIds(wechatUserId);
+	}
+
 }

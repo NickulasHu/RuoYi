@@ -69,4 +69,7 @@ public interface ISysUserDeptService
      * @return 用户Id
      */
 	public List<Long> selectUserIdByDeptId(Long deptId);
+
+	/**删除所有人员的时候，管理关系也要删掉**/
+	public int deleteAll();
 }

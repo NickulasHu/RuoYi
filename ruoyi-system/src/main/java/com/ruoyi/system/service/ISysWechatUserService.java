@@ -62,4 +62,6 @@ public interface ISysWechatUserService
 	public int deleteAllSysWechatUserByIds();
 
 	public String selectSysWechatUserByUserId(Long userId);
+
+	public int relieveRelationByIds(String wechatUserId);
 }

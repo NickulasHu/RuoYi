@@ -106,4 +106,10 @@ public class SysUserDeptServiceImpl implements ISysUserDeptService
 	public List<Long> selectUserIdByDeptId(Long deptId) {
 		return sysUserDeptMapper.selectUserIdByDeptId(deptId);
 	}
+
+	@Override
+	public int deleteAll() {
+		// TODO Auto-generated method stub
+		return sysUserDeptMapper.deleteAll();
+	}
 }

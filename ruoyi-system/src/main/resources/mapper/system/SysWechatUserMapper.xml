@@ -74,6 +74,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where openId = #{openId}
     </update>
+    
+    <update id="relieveRelationByIds" parameterType="String">
+        update sys_wechat_user set userId=null,userName=null
+        where openId = #{wechatUserId}
+    </update>
 
     <delete id="deleteSysWechatUserById" parameterType="String">
         delete from sys_wechat_user where openId = #{openId}

@@ -154,6 +154,15 @@ public class SysWechatUserController extends BaseController
     	return toAjax(sysWechatUserService.deleteAllSysWechatUserByIds());
     }
     
+    /**解绑关系**/
+    @RequiresPermissions("system:wechatUser:edit")
+    @PostMapping("/relieveRelation")
+    @ResponseBody
+    public AjaxResult relieveRelation(String wechatUserId)
+    {
+    	return toAjax(sysWechatUserService.relieveRelationByIds(wechatUserId));
+    }
+    
     /**同步用户数据**/
     @RequiresPermissions("system:wechatUser:view")
     @PostMapping("/syncUserINfo")
