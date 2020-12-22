@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.config.WechatConfig;
+import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.common.wechat.WxMpServiceInstance;
@@ -107,12 +108,19 @@ public class eventRcvController
 	    					 eventnotify.setSrcName(jsonEvent.getString("srcName"));
 	    				 }
 	    				
-	    				 if(jsonEvent.getString("extEventCardNo")!=null) {
+	    				 if(jsondata.getString("extEventCardNo")!=null) {
 	    					 eventnotify.setExtEventCardNo(jsondata.getString("extEventCardNo"));
 	    				 }
 	    				
-	    				 if(jsonEvent.getString("extEventPersonNo")!=null) {
+	    				 if(jsondata.getString("extEventPersonNo")!=null) {
 	    					 eventnotify.setExtEventPersonNo(IdUtils.getLongFormString(jsondata.getString("extEventPersonNo")));
+	    				 }
+	    				 
+	    				 if(jsondata.getString("ExtTemp")!=null) {
+	    					 JSONObject jsonExtTemp=JSONObject.parseObject(jsonEvent.getString("ExtTemp"));
+	    					 if(jsonExtTemp.getString("temp")!=null) {
+		    					 eventnotify.setTemp(jsonExtTemp.getString("temp"));
+		    				 }
 	    				 }
 	    				 sysEventNotifyService.insertSysEventnotify(eventnotify);
 	    				 sendEventMessage(eventnotify);
@@ -126,15 +134,21 @@ public class eventRcvController
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateString = formatter.format(eventnotify.getHappenTime());
 		SysUser user;
-		String userInfo="姓名：未知，编号：未知";
+		String userName="未知";
+		String userDept="未知";
+		String tempStr=eventnotify.getTemp().substring(0, 3)+" °C";
 		if(eventnotify.getExtEventPersonNo()!=null) {
 			user = userService.selectUserById(eventnotify.getExtEventPersonNo());
 			if(user!=null) {
-				userInfo = "姓名："+user.getUserName()+",编号："+user.getJobNo();
+				userName = user.getUserName();
+				SysDept userdept=deptService.selectDeptById(user.getDeptId());
+				if(userdept!=null) {
+					userDept=userdept.getDeptName();
+				}
 			}
 		}
 		
-		String messagetempId=wechatConfig.templateId;
+		String messagetempId=wechatConfig.templateIdTwo;
 		WxMpService wxMpService = WxMpServiceInstance.getInstance().getWxMpService();
 		
 		//获取防疫管理组ID
@@ -149,11 +163,12 @@ public class eventRcvController
 											      .toUser(openId)
 											      .templateId(messagetempId)
 											      .build();
-			templateMessage.addWxMpTemplateData(new WxMpTemplateData("first", "尊敬的校领导："+dateString+"在"+eventnotify.getSrcName()+"检测有体温异常人员，"+userInfo));
-			templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword1", "湖北省宜昌市凝德总部"));
-			templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword2", "2020年12月14日15:00"));
-			templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword3", "250000元"));
-			templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword4", "15213038372"));
+			templateMessage.addWxMpTemplateData(new WxMpTemplateData("first", "您好，刚检测到人员体温异常，请及时处理！"));
+			templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword1", userName));
+			templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword2", tempStr));
+			templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword3", dateString));
+			templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword4", eventnotify.getSrcName()));
+			templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword5", userDept));
 			templateMessage.addWxMpTemplateData(new WxMpTemplateData("remark", "感谢您的使用"));
 		    try {
 				wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);

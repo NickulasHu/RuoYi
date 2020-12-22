@@ -38,6 +38,10 @@ public class SysEventnotify extends BaseEntity
     /** 触发人ID */
     @Excel(name = "触发人ID")
     private Long extEventPersonNo;
+    
+    /** 体温温度 */
+    @Excel(name = "体温温度")
+    private String temp;
 
     public void setEventId(String eventId) 
     {
@@ -94,7 +98,15 @@ public class SysEventnotify extends BaseEntity
         return extEventPersonNo;
     }
 
-    @Override
+    public String getTemp() {
+		return temp;
+	}
+
+	public void setTemp(String temp) {
+		this.temp = temp;
+	}
+
+	@Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("eventId", getEventId())

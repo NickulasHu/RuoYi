@@ -11,10 +11,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="srcName"    column="srcName"    />
         <result property="extEventCardNo"    column="extEventCardNo"    />
         <result property="extEventPersonNo"    column="extEventPersonNo"    />
+        <result property="temp"    column="temp"    />
     </resultMap>
 
     <sql id="selectSysEventnotifyVo">
-        select eventId, eventType, happenTime, srcName, extEventCardNo, extEventPersonNo from sys_eventnotify
+        select eventId, eventType, happenTime, srcName, extEventCardNo, extEventPersonNo, temp from sys_eventnotify
     </sql>
 
     <select id="selectSysEventnotifyList" parameterType="SysEventnotify" resultMap="SysEventnotifyResult">
@@ -42,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="srcName != null">srcName,</if>
             <if test="extEventCardNo != null">extEventCardNo,</if>
             <if test="extEventPersonNo != null">extEventPersonNo,</if>
+            <if test="temp != null">temp,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="eventId != null">#{eventId},</if>
@@ -50,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="srcName != null">#{srcName},</if>
             <if test="extEventCardNo != null">#{extEventCardNo},</if>
             <if test="extEventPersonNo != null">#{extEventPersonNo},</if>
+            <if test="temp != null">#{temp},</if>
          </trim>
     </insert>
 
@@ -61,6 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="srcName != null">srcName = #{srcName},</if>
             <if test="extEventCardNo != null">extEventCardNo = #{extEventCardNo},</if>
             <if test="extEventPersonNo != null">extEventPersonNo = #{extEventPersonNo},</if>
+            <if test="temp != null">temp = #{temp},</if>
         </trim>
         where eventId = #{eventId}
     </update>

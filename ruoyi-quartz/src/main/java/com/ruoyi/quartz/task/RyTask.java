@@ -177,7 +177,7 @@ public class RyTask
     	startDate=strOfToday + " "+startDate;
 		
 		if(allDepts==null || allDepts.size()==0)return;
-		String messagetempId=wechatConfig.templateId;
+		String messagetempId=wechatConfig.templateIdOne;
 		WxMpService wxMpService = WxMpServiceInstance.getInstance().getWxMpService();
 		for (int i = 0; i < allDepts.size(); i++) {
 			List<SysUser> unnormalUser= new ArrayList<SysUser>();
@@ -200,10 +200,11 @@ public class RyTask
 					studentInfo.append("、");
 				}
 			}
-			studentInfo.append("归寝异常");
+			
 			//调用方法发送
 			//查找老师openId，模板ID,
 			Long deptId = allDepts.get(i).getDeptId();
+			SysDept currentDepte=deptService.selectDeptById(deptId);
 			List<Long> useIds = userDeptService.selectUserIdByDeptId(deptId);
 			if(useIds==null ||useIds.size()==0)continue;
 			for (int j = 0; j < useIds.size(); j++) {
@@ -215,11 +216,11 @@ public class RyTask
 												      .toUser(openId)
 												      .templateId(messagetempId)
 												      .build();
-				templateMessage.addWxMpTemplateData(new WxMpTemplateData("first", "尊敬的"+wechatUser.getUserName()+"老师,您的学生："+studentInfo.toString()));
-				templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword1", "湖北省宜昌市凝德总部"));
-				templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword2", "2020年12月14日15:00"));
-				templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword3", "250000元"));
-				templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword4", "15213038372"));
+				templateMessage.addWxMpTemplateData(new WxMpTemplateData("first", "您好，尊敬的"+wechatUser.getUserName()+"老师！"));
+				templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword1", strOfToday));
+				templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword2", currentDepte.getDeptName()));
+				templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword3", studentInfo.toString()));
+				templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword4", "归寝异常！"));
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("remark", "感谢您的使用"));
 			    try {
 					wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
