@@ -1,10 +1,12 @@
 package com.ruoyi.common.wechat;
+import org.springframework.stereotype.Component;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 
+@Component
 public class WxMpServiceInstance {
 	private WxMpService wxMpService;
 	private WxMpConfigStorage wxMpConfigStorage;
@@ -45,10 +47,8 @@ public class WxMpServiceInstance {
 	public WxMpConfigStorage wxMpConfigStorage() {
 		WxMpInMemoryConfigStorage wxMpInMemoryConfigStorage = new WxMpInMemoryConfigStorage();
 		
-	    wxMpInMemoryConfigStorage.setAppId("wxb46e5c71a795750a");
-	    wxMpInMemoryConfigStorage.setSecret("a0adad96625ff3db6e56491d48c98aed");
-	   /* wxMpInMemoryConfigStorage.setToken(wechatConfig.token);
-	    wxMpInMemoryConfigStorage.setAesKey(wechatConfig.aesKey);*/
+	    wxMpInMemoryConfigStorage.setAppId("wx34c892e588853d99");
+	    wxMpInMemoryConfigStorage.setSecret("354178fc64010d64ae8f3f2e07d0008f");
 	    return wxMpInMemoryConfigStorage;
 	}
 }

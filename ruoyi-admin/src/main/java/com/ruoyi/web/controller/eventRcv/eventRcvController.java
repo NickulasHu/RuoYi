@@ -117,7 +117,7 @@ public class eventRcvController
 	    				 }
 	    				 
 	    				 if(jsondata.getString("ExtTemp")!=null) {
-	    					 JSONObject jsonExtTemp=JSONObject.parseObject(jsonEvent.getString("ExtTemp"));
+	    					 JSONObject jsonExtTemp=JSONObject.parseObject(jsondata.getString("ExtTemp"));
 	    					 if(jsonExtTemp.getString("temp")!=null) {
 		    					 eventnotify.setTemp(jsonExtTemp.getString("temp"));
 		    				 }

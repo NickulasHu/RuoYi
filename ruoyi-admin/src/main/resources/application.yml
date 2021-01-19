@@ -141,7 +141,7 @@ hikvision:
    host: 10.3.38.2:443
    appKey: 27012763
    appSecret: KqVkuth9Fa8IBxb1rLQU
-   localIp: 10.3.34.252:8090
+   localIp: 10.3.38.223:8090
 
 wechat:
    appId: wx34c892e588853d99

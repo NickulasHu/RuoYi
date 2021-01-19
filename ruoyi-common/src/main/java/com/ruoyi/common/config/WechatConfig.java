@@ -11,12 +11,6 @@ public class WechatConfig {
 
     @Value("${wechat.secret}")
     public String secret;
-/*
-    @Value("${wechat.token}")
-    public String token;
-    
-    @Value("${wechat.aesKey}")
-    public String aesKey;*/
     
     @Value("${wechat.templateIdOne}")
     public String templateIdOne;
