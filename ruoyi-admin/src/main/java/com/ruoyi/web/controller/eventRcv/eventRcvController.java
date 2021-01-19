@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -96,12 +97,17 @@ public class eventRcvController
 	    				 }
 	    				
 	    				 if(jsonEvent.getString("happenTime")!=null) {
-	    					 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	 	    				try {
-	 							eventnotify.setHappenTime(simpleDateFormat.parse(jsonEvent.getString("happenTime")));
-	 						} catch (ParseException e) {
-	 							e.printStackTrace();
-	 						}
+	    					 SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy HH:mm:ss z");
+	    					 Date date = new Date();
+							try {
+								date = sdf.parse(jsonEvent.getString("happenTime"));
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+	    					 
+	    					 //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    					 eventnotify.setHappenTime(date);
 	    				 }
 	    				 
 	    				 if(jsonEvent.getString("srcName")!=null) {
