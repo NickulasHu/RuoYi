@@ -70,7 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="selectDeptByName" resultMap="SysDeptResult">
-	    select dept_id where 
+	    select dept_id from sys_dept where 
 	    dept_name like concat('%', #{deptName}, '%')
 	</select>
 

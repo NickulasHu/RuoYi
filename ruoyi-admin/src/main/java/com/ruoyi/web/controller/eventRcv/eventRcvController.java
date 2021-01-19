@@ -2,7 +2,6 @@ package com.ruoyi.web.controller.eventRcv;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -97,16 +96,7 @@ public class eventRcvController
 	    				 }
 	    				
 	    				 if(jsonEvent.getString("happenTime")!=null) {
-	    					 SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy HH:mm:ss z");
 	    					 Date date = new Date();
-							try {
-								date = sdf.parse(jsonEvent.getString("happenTime"));
-							} catch (ParseException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-	    					 
-	    					 //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    					 eventnotify.setHappenTime(date);
 	    				 }
 	    				 
@@ -114,12 +104,12 @@ public class eventRcvController
 	    					 eventnotify.setSrcName(jsonEvent.getString("srcName"));
 	    				 }
 	    				
-	    				 if(jsondata.getString("extEventCardNo")!=null) {
-	    					 eventnotify.setExtEventCardNo(jsondata.getString("extEventCardNo"));
+	    				 if(jsondata.getString("ExtEventCardNo")!=null) {
+	    					 eventnotify.setExtEventCardNo(jsondata.getString("ExtEventCardNo"));
 	    				 }
 	    				
-	    				 if(jsondata.getString("extEventPersonNo")!=null) {
-	    					 eventnotify.setExtEventPersonNo(IdUtils.getLongFormString(jsondata.getString("extEventPersonNo")));
+	    				 if(jsondata.getString("ExtEventPersonNo")!=null) {
+	    					 eventnotify.setExtEventPersonNo(IdUtils.getLongFormString(jsondata.getString("ExtEventPersonNo")));
 	    				 }
 	    				 
 	    				 if(jsondata.getString("ExtTemp")!=null) {
@@ -158,7 +148,7 @@ public class eventRcvController
 		WxMpService wxMpService = WxMpServiceInstance.getInstance().getWxMpService();
 		
 		//获取防疫管理组ID
-		Long deptId = deptService.selectDeptByName("防疫管控");
+		Long deptId = deptService.selectDeptByName("疫情管控");
 		List<Long> useIds = userDeptService.selectUserIdByDeptId(deptId);
 		if(useIds==null ||useIds.size()==0)return;
 		for (int j = 0; j < useIds.size(); j++) {
