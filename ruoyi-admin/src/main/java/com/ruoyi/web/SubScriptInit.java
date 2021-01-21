@@ -61,7 +61,7 @@ public class SubScriptInit implements CommandLineRunner {
     	 };
     	 
     	 JSONObject jsonBody = new JSONObject();
-    	 jsonBody.put("eventTypes",new int[]{197106,197105});
+    	 jsonBody.put("eventTypes",new int[]{197106});
     	 jsonBody.put("eventDest","http://"+hikvisionConfig.localIp+"/eventRcv");
     	 jsonBody.put("subType",0);
     	 jsonBody.put("eventLvl",new int[]{2});

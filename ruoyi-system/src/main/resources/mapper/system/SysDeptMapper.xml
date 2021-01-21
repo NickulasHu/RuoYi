@@ -69,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where dept_name=#{deptName} and parent_id = #{parentId} limit 1
 	</select>
 	
-	<select id="selectDeptByName" resultMap="SysDeptResult">
+	<select id="selectDeptByName" resultType="Long">
 	    select dept_id from sys_dept where 
 	    dept_name like concat('%', #{deptName}, '%')
 	</select>

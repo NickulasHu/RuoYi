@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.config.WechatConfig;
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.common.wechat.WxMpServiceInstance;
 import com.ruoyi.system.domain.SysEventnotify;
@@ -132,7 +133,17 @@ public class eventRcvController
 		SysUser user;
 		String userName="未知";
 		String userDept="未知";
-		String tempStr=eventnotify.getTemp().substring(0, 3)+" °C";
+		String tempStr="";
+		if(StringUtils.isEmpty(eventnotify.getTemp())) {
+			tempStr="未知";
+		}else if(eventnotify.getTemp().length()==3) {
+			tempStr=eventnotify.getTemp().substring(0, 1)+" °C";
+		}else if(eventnotify.getTemp().length()>=4) {
+			tempStr=eventnotify.getTemp().substring(0, 3)+" °C";
+		}else {
+			tempStr=eventnotify.getTemp()+" °C";
+		}
+		
 		if(eventnotify.getExtEventPersonNo()!=null) {
 			user = userService.selectUserById(eventnotify.getExtEventPersonNo());
 			if(user!=null) {

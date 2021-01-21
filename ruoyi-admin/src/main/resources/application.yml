@@ -31,7 +31,7 @@ server:
 # 日志配置
 logging:
   level:
-    com.ruoyi: debug
+    com.ruoyi: info
     org.springframework: warn
 
 # 用户配置
@@ -147,4 +147,5 @@ wechat:
    appId: wx34c892e588853d99
    secret: 354178fc64010d64ae8f3f2e07d0008f
    templateIdOne: 6Uzu-9FQ7Sgvo-Q3F4fKff6boTIHtiesuRVZS6QNcJU
-   templateIdTwo: s5ZM5NaHT5ZJ03k-BZZ_13wUMtkWPZR7P6LAzee5hlQ
+   templateIdTwo: BkqAGwn55j4DjhfdtJqploh8ZHGxIPST-JKxKAP3wiI
+   

@@ -34,7 +34,6 @@ import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
-
 /**
  * 定时任务调度测试
  * 
@@ -211,16 +210,15 @@ public class RyTask
 				String openId=wechatUserService.selectSysWechatUserByUserId(useIds.get(j));
 				if(openId==null)continue;
 				SysWechatUser wechatUser=wechatUserService.selectSysWechatUserById(openId);
-			
 				WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
 												      .toUser(openId)
 												      .templateId(messagetempId)
 												      .build();
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("first", "您好，尊敬的"+wechatUser.getUserName()+"老师！"));
-				templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword1", strOfToday));
-				templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword2", currentDepte.getDeptName()));
-				templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword3", studentInfo.toString()));
-				templateMessage.addWxMpTemplateData(new WxMpTemplateData("keyword4", "归寝异常！"));
+				templateMessage.addWxMpTemplateData(new WxMpTemplateData("date", strOfToday));
+				templateMessage.addWxMpTemplateData(new WxMpTemplateData("class", currentDepte.getDeptName()));
+				templateMessage.addWxMpTemplateData(new WxMpTemplateData("name", studentInfo.toString()));
+				templateMessage.addWxMpTemplateData(new WxMpTemplateData("info", "归寝异常！"));
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("remark", "感谢您的使用"));
 			    try {
 					wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
@@ -248,9 +246,11 @@ public class RyTask
 		
 		//剔除有记录的，找到没有记录的
 		List<SysUser> classMatesHasNoRecord=new ArrayList<SysUser>();
-		for (int j = 0; j < thisDeptUserRecord.size(); j++) {
-			if(classMateMap.containsKey(thisDeptUserRecord.get(j).getStudentCode())) {
-				classMateMap.remove(thisDeptUserRecord.get(j).getStudentCode());
+		if(thisDeptUserRecord!=null && thisDeptUserRecord.size()>0) {
+			for (int j = 0; j < thisDeptUserRecord.size(); j++) {
+				if(classMateMap.containsKey(thisDeptUserRecord.get(j).getStudentCode())) {
+					classMateMap.remove(thisDeptUserRecord.get(j).getStudentCode());
+				}
 			}
 		}
 		

@@ -344,7 +344,7 @@ public class SysRuleController extends BaseController
 			job.setCronExpression(getCron(rule.getLaterTime()));
 			job.setMisfirePolicy("3");//以前的不执行
 			job.setConcurrent("1");//不并发，0是允许
-			job.setStatus("1");//状态正常
+			job.setStatus("0");//状态启动
 			job.setRemark(rule.getRuleId());
 			
 			SysJob origJob=jobService.getJobByRuleId(rule.getRuleId());
