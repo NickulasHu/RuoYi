@@ -23,6 +23,7 @@ import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.wechat.WxMpServiceInstance;
 import com.ruoyi.system.domain.SysWechatUser;
@@ -273,13 +274,12 @@ public class SysWechatUserController extends BaseController
     @ResponseBody
     public AjaxResult configSave(SysWechatUser sysWechatUser)
     {
-    	if(sysWechatUser.getUserId()!=null) {
-    		SysUser user=userService.selectUserById(sysWechatUser.getUserId());
-    		if(user!=null) {
-    			sysWechatUser.setUserName(user.getUserName());
-    		}
-    	}
-    	
+    	if(sysWechatUser.getUserId()==null)return AjaxResult.error("failed");
+    	SysUser user=userService.selectUserById(sysWechatUser.getUserId());
+		String openId= sysWechatUserService.selectSysWechatUserByUserId(sysWechatUser.getUserId());
+		if(user==null || !StringUtils.isEmpty(openId))return AjaxResult.error("failed");
+		
+		sysWechatUser.setUserName(user.getUserName());
     	if(sysWechatUserService.updateSysWechatUser(sysWechatUser)>0) {
     		return AjaxResult.success("success");
     	}else {

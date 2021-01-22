@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -321,6 +322,7 @@ public class SysDeptServiceImpl implements ISysDeptService
 	public List<SysDept> selectChildDeptList(SysDept dept) {
 		List<SysDept> allDept = deptMapper.selectDeptList(dept);
 		HashMap<Long, SysDept> deptMap=new HashMap<Long, SysDept>();
+		String pattern="\\D";
 		
 		if(allDept==null || allDept.size()==0) return allDept;
 		for (int i = 0; i < allDept.size(); i++) {
@@ -329,10 +331,17 @@ public class SysDeptServiceImpl implements ISysDeptService
 		}
 		
     	for (int i = 0; i < allDept.size(); i++) {
-			//循环添加父级ID
+    		//正则判断，不是班级的去掉
+    		String deptName=allDept.get(i).getDeptName();
+    		boolean isMatch=Pattern.matches(pattern, deptName);
+    		
+			//循环去掉父级部门
     		if(allDept.get(i).getParentId()!=null) {
     			Long parentId=allDept.get(i).getParentId();
     			deptMap.remove(parentId);
+    		}else if(isMatch) {
+    			Long deptId=allDept.get(i).getDeptId();
+    			deptMap.remove(deptId);
     		}
 		}
     	
