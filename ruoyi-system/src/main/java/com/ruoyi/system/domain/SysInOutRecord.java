@@ -22,9 +22,13 @@ public class SysInOutRecord extends BaseEntity
     @Excel(name = "学号")
     private String studentCode;
 
-    /** 记录类型 */
+    /** 行为类型: 出or入 */
     @Excel(name = "记录类型")
     private String entryType;
+    
+    /** 考勤类型: 宿舍考勤or校门考勤 */
+    @Excel(name = "考勤类型")
+    private String recordType;
 
     /** 姓名 */
     @Excel(name = "姓名")
@@ -77,7 +81,16 @@ public class SysInOutRecord extends BaseEntity
     {
         return entryType;
     }
-    public void setStudentName(String studentName) 
+    
+    public String getRecordType() {
+		return recordType;
+	}
+
+	public void setRecordType(String recordType) {
+		this.recordType = recordType;
+	}
+
+	public void setStudentName(String studentName) 
     {
         this.studentName = studentName;
     }

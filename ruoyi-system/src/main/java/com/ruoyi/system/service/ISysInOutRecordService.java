@@ -63,5 +63,5 @@ public interface ISysInOutRecordService
 	public SysInOutRecord selectLastRecordByCode(SysInOutRecord searchRecord);
 
 	//删除所有记录
-	public int deleteAllRecord();
+	public int deleteAllRecord(String recordType);
 }

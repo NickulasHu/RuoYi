@@ -61,5 +61,5 @@ public interface SysInOutRecordMapper
 
 	public SysInOutRecord selectLastRecordByCode(SysInOutRecord searchRecord);
 
-	public int deleteAllRecord();
+	public int deleteAllRecord(String recordType);
 }

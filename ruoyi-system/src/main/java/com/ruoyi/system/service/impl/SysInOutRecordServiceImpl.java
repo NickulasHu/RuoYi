@@ -99,7 +99,7 @@ public class SysInOutRecordServiceImpl implements ISysInOutRecordService
 	}
 
 	@Override
-	public int deleteAllRecord() {
-		return sysInOutRecordMapper.deleteAllRecord();
+	public int deleteAllRecord(String recordType) {
+		return sysInOutRecordMapper.deleteAllRecord(recordType);
 	}
 }
