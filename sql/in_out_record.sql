@@ -15,3 +15,4 @@ create table sys_in_out_record (
 ) engine=innodb;
 
 ALTER TABLE sys_in_out_record ADD recordType varchar(50) NULL COMMENT '考勤类型';
+ALTER TABLE sys_user ADD personId varchar(50) NULL COMMENT '海康人员ID';

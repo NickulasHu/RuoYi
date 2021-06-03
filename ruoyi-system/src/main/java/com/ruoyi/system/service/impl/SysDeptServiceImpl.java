@@ -322,7 +322,7 @@ public class SysDeptServiceImpl implements ISysDeptService
 	public List<SysDept> selectChildDeptList(SysDept dept) {
 		List<SysDept> allDept = deptMapper.selectDeptList(dept);
 		HashMap<Long, SysDept> deptMap=new HashMap<Long, SysDept>();
-		String pattern="\\D";
+		String pattern="\\D*";
 		
 		if(allDept==null || allDept.size()==0) return allDept;
 		for (int i = 0; i < allDept.size(); i++) {
@@ -339,7 +339,9 @@ public class SysDeptServiceImpl implements ISysDeptService
     		if(allDept.get(i).getParentId()!=null) {
     			Long parentId=allDept.get(i).getParentId();
     			deptMap.remove(parentId);
-    		}else if(isMatch) {
+    		}
+    		
+    		if(isMatch) {
     			Long deptId=allDept.get(i).getDeptId();
     			deptMap.remove(deptId);
     		}

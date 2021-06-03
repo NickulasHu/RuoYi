@@ -206,6 +206,7 @@ public class SysUserController extends BaseController
         					 
         					 if(jsonUser.getString("personId")!=null) {
         						 user.setUserId(IdUtils.getLongFormString(jsonUser.getString("personId"))); 
+        						 user.setPersonId(jsonUser.getString("personId"));
         					 }
         					 
         					 if(jsonUser.getString("personName")!=null) {

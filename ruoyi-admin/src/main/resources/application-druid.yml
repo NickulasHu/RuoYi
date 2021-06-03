@@ -16,6 +16,8 @@ spring:
                 url: 
                 username: 
                 password: 
+            mysql:
+                usePingMethod: false
             # 初始连接数
             initialSize: 5
             # 最小连接池数量

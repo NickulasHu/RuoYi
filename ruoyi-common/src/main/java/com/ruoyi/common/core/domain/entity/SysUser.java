@@ -39,6 +39,10 @@ public class SysUser extends BaseEntity
     @Excel(name = "海康部门ID")
     private String orgId;
     
+    /** 海康人员ID */
+    @Excel(name = "海康人员ID")
+    private String personId;
+    
     /** 工作编号 */
     @Excel(name = "工作编号")
     private String jobNo;
@@ -174,6 +178,14 @@ public class SysUser extends BaseEntity
 
 	public void setOrgId(String orgId) {
 		this.orgId = orgId;
+	}
+
+	public String getPersonId() {
+		return personId;
+	}
+
+	public void setPersonId(String personId) {
+		this.personId = personId;
 	}
 
 	public String getJobNo() {
