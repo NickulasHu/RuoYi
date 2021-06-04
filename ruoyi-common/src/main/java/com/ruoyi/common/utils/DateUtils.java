@@ -3,6 +3,7 @@ package com.ruoyi.common.utils;
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -160,4 +161,19 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         // long sec = diff % nd % nh % nm / ns;
         return day + "天" + hour + "小时" + min + "分钟";
     }
+    
+    /**
+     *当前日期减去天数
+     *date 格式为 yyyy-MM-dd
+     */
+	/*private static String subDay(String date ,int num) throws ParseException{
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    	Date dt = sdf.parse(date);
+    	Calendar rightNow = Calendar.getInstance();
+    	rightNow.setTime(dt);
+    	rightNow.add(Calendar.DAY_OF_MONTH, -1*num);
+    	Date dt1 = rightNow.getTime();
+    	String reStr = sdf.format(dt1);
+    	return reStr;
+    }*/
 }

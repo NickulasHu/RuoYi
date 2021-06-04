@@ -11,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hikvision.artemis.sdk.ArtemisHttpUtil;
@@ -87,7 +85,7 @@ public class RyTask
     {
         System.out.println("执行无参方法");
         //从海康接口获取校门考勤记录
-        //发送消息给班主任
+        //发送消息给班主任 
         synSchoolGateRecord();
         sendSchoolGateMesg();
     }
@@ -97,7 +95,7 @@ public class RyTask
     	sendMesg(ruleId);
     }
     
-	private void syncRecord(String ruleId) {
+	private void syncRecord(String ruleId) throws ParseException {
 		SysRule rule = ruleService.selectSysRuleById(ruleId);
     	String endDate=rule.getLaterTime();
     	String startDate=rule.getInDormStart();
@@ -123,7 +121,7 @@ public class RyTask
     	//同步所有班级学生进出记录
 	   	//同步前删除以前的记录
 	   	String recordType = "dormitory";
-	   	//inOutRecordService.deleteAllRecord(recordType);
+	   	inOutRecordService.deleteAllRecord(recordType);
     	//获取所有班级
     	List<SysDept> allClass = deptService.selectChildDeptList(new SysDept());
     	if(allClass!=null && allClass.size()>0) {
@@ -133,6 +131,7 @@ public class RyTask
     			if(calssMates!=null && calssMates.size()>0) {
     				for (int j = 0; j < calssMates.size(); j++) {
     					 JSONObject jsonBody = new JSONObject();
+    					 jsonBody.put("dormId","-1");
     			    	 jsonBody.put("endDate",endDate);
     			    	 jsonBody.put("startDate",startDate);
     			    	 jsonBody.put("pageNum",1);
@@ -146,9 +145,6 @@ public class RyTask
     			    	 if(result==null) return;
     			    	 JSONObject jsonData = JSONObject.parseObject(result);
     			    	 
-    			    	 log.error("学生宿舍考勤记录");
-    			    	 log.error(result);
-    			    	 
     			    	 if("0".equals(jsonData.getString("code"))&&jsonData.getString("data")!=null) {
     			    		 jsonData=JSONObject.parseObject(jsonData.getString("data"));
     			    		 if(jsonData.getString("records")!=null) {
@@ -161,6 +157,14 @@ public class RyTask
 										if(StringUtils.isEmpty(recordId)) {
 											recordId = IdUtils.randomUUID();
 										}
+										if(inOutRecordService.selectSysInOutRecordById(recordId)!=null) continue;
+										
+										if(jsonRecord.getString("alarmTime")!=null) {
+											boolean isTime = isAttendanceTime(jsonRecord.getString("alarmTime"),startDate,endDate);
+											if(!isTime) continue;
+										}
+										
+										record.setAlarmTime(jsonRecord.getString("alarmTime"));
 										record.setRecordId(recordId);
 										record.setStudentCode(jsonRecord.getString("studentCode"));
 										record.setEntryType(jsonRecord.getString("entryType"));
@@ -168,9 +172,8 @@ public class RyTask
 										record.setSex(jsonRecord.getString("sexName"));
 										record.setOrgId(jsonRecord.getString("orgId"));
 										record.setDormId(jsonRecord.getString("dormId"));
-										record.setAlarmTime(jsonRecord.getString("alarmTime"));
 										record.setRecordType(recordType);
-										if(inOutRecordService.selectSysInOutRecordById(recordId)!=null) continue;
+										
 										inOutRecordService.insertSysInOutRecord(record);
 									}
     			    			 }
@@ -182,6 +185,24 @@ public class RyTask
     	}
 	}
 	
+	private boolean isAttendanceTime(String alarmTime, String startDate, String endDate) throws ParseException {
+		boolean result= false;
+		if(StringUtils.length(alarmTime)>0) {
+			alarmTime = alarmTime.replace("T"," ");
+			alarmTime = alarmTime.substring(0,19);
+		}
+		SimpleDateFormat normalDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		Date alarmDate = normalDate.parse(alarmTime); 
+		Date stDate = normalDate.parse(alarmTime);
+		Date enDate = normalDate.parse(alarmTime);
+		if(alarmDate.compareTo(stDate)>0 && enDate.compareTo(alarmDate)>0) {
+			result = true;
+		}
+		
+		return result;
+	}
+
 	private void sendMesg(String ruleId) throws ParseException {
 		SysRule rule = ruleService.selectSysRuleById(ruleId);
 		List<SysDept> allDepts=deptService.selectChildDeptList(new SysDept());
@@ -212,19 +233,11 @@ public class RyTask
 			List<SysUser> classMatesHasNoRecord=getClassMateWithOutRecord(allDepts.get(i), finalStartDate, finalEndDate, "dormitory");
 			if(classMatesHasNoRecord!=null && classMatesHasNoRecord.size()>0) {
 				unnormalUser.addAll(classMatesHasNoRecord);
-				
-				String unnormalUserJson=JSON.toJSONString(classMatesHasNoRecord);
-		    	log.error("无记录的学生-宿舍考勤");
-		    	log.error(unnormalUserJson);
 			}
 			
 			List<SysUser> classMateGoOut=getClassMateGoOut(allDepts.get(i), finalStartDate, finalEndDate, "dormitory");
 			if(classMateGoOut!=null && classMateGoOut.size()>0) {
 				unnormalUser.addAll(classMateGoOut);
-				
-				String unnormalUserJson=JSON.toJSONString(classMateGoOut);
-		    	log.error("有记录但最后出去了的学生-宿舍考勤");
-		    	log.error(unnormalUserJson);
 			}
 			//拼消息
 			if(unnormalUser.size()==0) continue;
@@ -256,11 +269,11 @@ public class RyTask
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("name", studentInfo.toString()));
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("info", "归寝异常！"));
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("remark", "感谢您的使用"));
-			    try {
+			    /*try {
 					wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
 				} catch (WxErrorException e) {
 					e.printStackTrace();
-				}
+				}*/
 			}
 		}
 	}
@@ -357,13 +370,9 @@ public class RyTask
     	//同步所有班级学生进出记录
 	   	//同步前删除以前的记录
 	   	String recordType = "schoolGate";
-//	   	inOutRecordService.deleteAllRecord(recordType);
+	   	inOutRecordService.deleteAllRecord(recordType);
     	//获取所有班级
     	List<SysDept> allClass = deptService.selectChildDeptList(new SysDept());
-    	
-    	String allClassJson=JSON.toJSONString(allClass);
-    	log.error("获取所有班级-校门考勤");
-    	log.error(allClassJson);
     	
     	if(allClass!=null && allClass.size()>0) {
     		for (int i = 0; i < allClass.size(); i++) {
@@ -450,20 +459,13 @@ public class RyTask
 			List<SysUser> classMatesHasNoRecord=getClassMateWithOutRecord(allDepts.get(i), finalStartDate, finalEndDate, "schoolGate");
 			if(classMatesHasNoRecord!=null && classMatesHasNoRecord.size()>0) {
 				unnormalUser.addAll(classMatesHasNoRecord);
-				
-				String unnormalUserJson=JSON.toJSONString(classMatesHasNoRecord);
-		    	log.error("没有考勤的学生-校门考勤");
-		    	log.error(unnormalUserJson);
 			}
 			
-			List<SysUser> classMateGoOut=getClassMateGoOut(allDepts.get(i), finalStartDate, finalEndDate, "schoolGate");
+			/*List<SysUser> classMateGoOut=getClassMateGoOut(allDepts.get(i), finalStartDate, finalEndDate, "schoolGate");
 			if(classMateGoOut!=null && classMateGoOut.size()>0) {
 				unnormalUser.addAll(classMateGoOut);
-				
-				String unnormalUserJson=JSON.toJSONString(classMateGoOut);
-		    	log.error("有记录但最后出去了的学生-校门考勤");
-		    	log.error(unnormalUserJson);
-			}
+			}*/
+			
 			//拼消息
 			if(unnormalUser.size()==0) continue;
 			StringBuffer studentInfo=new StringBuffer();
@@ -494,11 +496,11 @@ public class RyTask
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("name", studentInfo.toString()));
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("info", "返校异常！"));
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("remark", "感谢您的使用"));
-			    try {
+			    /*try {
 					wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
 				} catch (WxErrorException e) {
 					e.printStackTrace();
-				}
+				}*/
 			}
 		}
 	}
