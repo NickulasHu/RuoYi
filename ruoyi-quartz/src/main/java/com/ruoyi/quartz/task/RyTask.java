@@ -269,11 +269,11 @@ public class RyTask
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("name", studentInfo.toString()));
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("info", "归寝异常！"));
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("remark", "感谢您的使用"));
-			    /*try {
+			    try {
 					wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
 				} catch (WxErrorException e) {
 					e.printStackTrace();
-				}*/
+				}
 			}
 		}
 	}
@@ -496,11 +496,11 @@ public class RyTask
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("name", studentInfo.toString()));
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("info", "返校异常！"));
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData("remark", "感谢您的使用"));
-			    /*try {
+			    try {
 					wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
 				} catch (WxErrorException e) {
 					e.printStackTrace();
-				}*/
+				}
 			}
 		}
 	}
