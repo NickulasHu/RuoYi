@@ -244,9 +244,7 @@ public class SysWechatUserController extends BaseController
 			item.setN(sysDeptItem.getDeptName());
 			item.setV(Long.toString(sysDeptItem.getDeptId()));
 			
-			SysUser paramUser = new SysUser();
-			paramUser.setDeptId(sysDeptItem.getDeptId());
-			List<SysUser> uList = userService.selectUserList(paramUser);
+			List<SysUser> uList = userService.selectClassMates(sysDeptItem.getDeptId());
 			if(uList==null||uList.size()==0) {
 				subList = new ArrayList<CxSelect>();
 			}else {

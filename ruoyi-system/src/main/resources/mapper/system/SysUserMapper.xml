@@ -91,7 +91,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
-		ORDER BY CONVERT( u.user_name USING gbk ) COLLATE gbk_chinese_ci ASC
 	</select>
 	
 	<select id="selectAllocatedList" parameterType="SysUser" resultMap="SysUserResult">
@@ -132,6 +131,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectClassMates" parameterType="Long" resultMap="SysUserResult">
 	    <include refid="selectUserVo"/>
 		where u.dept_id = #{deptId}
+		ORDER BY CONVERT( u.user_name USING gbk ) COLLATE gbk_chinese_ci ASC
 	</select>
 	
 	<select id="selectUserByJobNo" parameterType="String" resultMap="SysUserResult">
