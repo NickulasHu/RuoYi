@@ -6944,6 +6944,6 @@ body.skin-3 {
 }
 
 .firstPage {
-	background:url(../../img/firstpage.png) no-repeat center fixed;
-	background-size: cover;
+	/* background:url(../../img/firstpage.png) no-repeat center fixed;
+	background-size: cover; */
 }
